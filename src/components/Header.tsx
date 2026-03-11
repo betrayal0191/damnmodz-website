@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import content from '@/data/content.json';
+import UserDropdown from '@/components/UserDropdown';
 
 export default function Header() {
   const { logo, nav } = content.header;
@@ -38,6 +39,7 @@ export default function Header() {
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
         </button>
+        <UserDropdown />
         <button aria-label="Cart" className="bg-transparent border-none cursor-pointer p-1 flex items-center justify-center group">
           <svg
             viewBox="0 0 24 24"

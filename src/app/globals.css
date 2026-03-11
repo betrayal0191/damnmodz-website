@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Ensure opacity-0 starting state for animated elements */
+.animate-slide-up,
+.animate-slide-up-1,
+.animate-slide-up-2,
+.animate-slide-up-3,
+.animate-slide-up-4 {
+  opacity: 0;
+}

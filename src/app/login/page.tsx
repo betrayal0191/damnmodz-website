@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
 import EmailMagicLinkForm from '@/components/auth/EmailMagicLinkForm';
+import GoogleLoginButton from '@/components/auth/GoogleLoginButton';
 import AuthErrorBanner from '@/components/auth/AuthErrorBanner';
 
 export const metadata = {
@@ -29,6 +30,16 @@ export default function LoginPage() {
         <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-6 space-y-6">
           {/* Email Magic Link Form */}
           <EmailMagicLinkForm />
+
+          {/* Divider */}
+          <div className="flex items-center gap-3">
+            <div className="flex-1 h-px bg-zinc-700" />
+            <span className="text-xs text-neutral-500 uppercase tracking-wider">or</span>
+            <div className="flex-1 h-px bg-zinc-700" />
+          </div>
+
+          {/* Google Login */}
+          <GoogleLoginButton />
         </div>
 
         {/* Link to Sign Up */}

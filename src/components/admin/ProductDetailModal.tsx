@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import type { Product } from '@/types/product';
 
@@ -11,15 +11,27 @@ interface ProductDetailModalProps {
 }
 
 export default function ProductDetailModal({ product, open, onClose }: ProductDetailModalProps) {
+  const [lightboxOpen, setLightboxOpen] = useState(false);
   /* ── Close on Escape ─────────────────────────────────── */
   useEffect(() => {
     if (!open) return;
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') {
+        if (lightboxOpen) {
+          setLightboxOpen(false);
+        } else {
+          onClose();
+        }
+      }
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [open, onClose]);
+  }, [open, onClose, lightboxOpen]);
+
+  /* ── Reset lightbox when modal closes ────────────────── */
+  useEffect(() => {
+    if (!open) setLightboxOpen(false);
+  }, [open]);
 
   /* ── Lock body scroll ────────────────────────────────── */
   useEffect(() => {
@@ -74,15 +86,21 @@ export default function ProductDetailModal({ product, open, onClose }: ProductDe
           {/* ── Image + Title row ────────────────────── */}
           <div className="flex gap-5">
             {product.image_url ? (
-              <Image
-                src={product.image_url}
-                alt={product.title}
-                width={120}
-                height={120}
-                className="rounded-xl object-cover w-[120px] h-[120px] flex-shrink-0 border border-dark-border"
-              />
+              <button
+                onClick={() => setLightboxOpen(true)}
+                className="flex-shrink-0 rounded-xl overflow-hidden border border-dark-border hover:border-accent/50 transition-colors cursor-zoom-in"
+                title="Click to enlarge"
+              >
+                <Image
+                  src={product.image_url}
+                  alt={product.title}
+                  width={100}
+                  height={150}
+                  className="object-cover w-[100px] h-[150px]"
+                />
+              </button>
             ) : (
-              <div className="w-[120px] h-[120px] rounded-xl bg-dark-body border border-dark-border flex items-center justify-center flex-shrink-0">
+              <div className="w-[100px] h-[150px] rounded-xl bg-dark-body border border-dark-border flex items-center justify-center flex-shrink-0">
                 <svg viewBox="0 0 24 24" className="w-10 h-10 fill-none stroke-neutral-600 stroke-2 [stroke-linecap:round] [stroke-linejoin:round]">
                   <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
                   <circle cx="8.5" cy="8.5" r="1.5" />
@@ -161,6 +179,33 @@ export default function ProductDetailModal({ product, open, onClose }: ProductDe
           </div>
         </div>
       </div>
+
+      {/* ── Image lightbox ───────────────────────────── */}
+      {lightboxOpen && product.image_url && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-md cursor-zoom-out"
+          onClick={() => setLightboxOpen(false)}
+        >
+          <div className="relative max-w-[80vw] max-h-[90vh]">
+            <Image
+              src={product.image_url}
+              alt={product.title}
+              width={600}
+              height={900}
+              className="object-contain max-w-[80vw] max-h-[90vh] rounded-2xl shadow-2xl"
+            />
+            <button
+              onClick={(e) => { e.stopPropagation(); setLightboxOpen(false); }}
+              className="absolute -top-3 -right-3 flex items-center justify-center w-8 h-8 rounded-full bg-dark-card border border-dark-border text-neutral-400 hover:text-white transition-colors"
+            >
+              <svg viewBox="0 0 24 24" className="w-4 h-4 fill-none stroke-current stroke-2 [stroke-linecap:round] [stroke-linejoin:round]">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

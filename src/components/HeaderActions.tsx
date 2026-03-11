@@ -5,20 +5,20 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
 import UserDropdown from '@/components/UserDropdown';
-import { isAdmin } from '@/lib/auth/admin';
+import { isOwner } from '@/lib/auth/owner';
 
 interface HeaderActionsProps {
   initialEmail: string | null;
-  initialIsAdmin: boolean;
+  initialIsOwner: boolean;
 }
 
-export default function HeaderActions({ initialEmail, initialIsAdmin }: HeaderActionsProps) {
+export default function HeaderActions({ initialEmail, initialIsOwner }: HeaderActionsProps) {
   const supabase = createClient();
   const [user, setUser] = useState<User | null>(
     initialEmail ? ({ email: initialEmail } as User) : null
   );
   const [loaded, setLoaded] = useState(!!initialEmail);
-  const [admin, setAdmin] = useState(initialIsAdmin);
+  const [owner, setOwner] = useState(initialIsOwner);
 
   useEffect(() => {
     const getUser = async () => {
@@ -26,7 +26,7 @@ export default function HeaderActions({ initialEmail, initialIsAdmin }: HeaderAc
         data: { user: currentUser },
       } = await supabase.auth.getUser();
       setUser(currentUser);
-      setAdmin(isAdmin(currentUser));
+      setOwner(isOwner(currentUser));
       setLoaded(true);
     };
     getUser();
@@ -35,7 +35,7 @@ export default function HeaderActions({ initialEmail, initialIsAdmin }: HeaderAc
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
-      setAdmin(isAdmin(session?.user ?? null));
+      setOwner(isOwner(session?.user ?? null));
     });
 
     return () => subscription.unsubscribe();
@@ -75,14 +75,15 @@ export default function HeaderActions({ initialEmail, initialIsAdmin }: HeaderAc
       {/* Email + User dropdown (only when logged in) */}
       {loaded && user && (
         <UserDropdown
+          isOwner={owner}
           renderTrigger={(toggle) => (
             <button
               onClick={toggle}
               className="flex items-center gap-2 bg-transparent border-none cursor-pointer p-0 group"
             >
-              {admin && (
+              {owner && (
                 <span className="text-xs font-semibold text-accent bg-accent/15 px-2 py-0.5 rounded-full">
-                  Admin
+                  Owner
                 </span>
               )}
               <span className="text-sm text-neutral-400 truncate max-w-[180px] transition-colors group-hover:text-white">

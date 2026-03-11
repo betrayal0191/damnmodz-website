@@ -2,7 +2,7 @@ import Link from 'next/link';
 import content from '@/data/content.json';
 import HeaderActions from '@/components/HeaderActions';
 import { createClient } from '@/lib/supabase/server';
-import { isAdmin } from '@/lib/auth/admin';
+import { isOwner } from '@/lib/auth/owner';
 
 /* ── Social icon SVGs ─────────────────────────────────── */
 function InstagramIcon() {
@@ -121,7 +121,7 @@ export default async function Header() {
         </div>
 
         {/* ── Right Icons (Sign In text + User + Wishlist + Cart) ── */}
-        <HeaderActions initialEmail={user?.email ?? null} initialIsAdmin={isAdmin(user ?? null)} />
+        <HeaderActions initialEmail={user?.email ?? null} initialIsOwner={isOwner(user ?? null)} />
       </div>
     </header>
   );

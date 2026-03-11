@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback, type ReactNode } from 'react';
+import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
 
@@ -11,9 +12,12 @@ interface UserDropdownProps {
   renderTrigger?: (toggle: () => void, isOpen: boolean) => ReactNode;
   /** Mode: 'signin' (default) or 'signup' — adapts labels and text. */
   mode?: 'signin' | 'signup';
+  /** Whether the current user is a site owner (shows Admin Panel link). */
+  isOwner?: boolean;
 }
 
-export default function UserDropdown({ renderTrigger, mode = 'signin' }: UserDropdownProps) {
+export default function UserDropdown({ renderTrigger, mode = 'signin', isOwner = false }: UserDropdownProps) {
+  const router = useRouter();
   const supabase = createClient();
 
   const [open, setOpen] = useState(false);
@@ -217,13 +221,26 @@ export default function UserDropdown({ renderTrigger, mode = 'signin' }: UserDro
                   </svg>
                 </div>
               ) : user ? (
-                /* ── Logged-in state — sign out only ──── */
-                <button
-                  onClick={handleSignOut}
-                  className="w-full py-2.5 bg-zinc-800 border border-zinc-600 text-neutral-300 text-sm font-medium rounded-lg transition-colors hover:bg-zinc-700 hover:text-white hover:border-zinc-500"
-                >
-                  Sign Out
-                </button>
+                /* ── Logged-in state ──── */
+                <div className="space-y-2">
+                  {isOwner && (
+                    <button
+                      onClick={() => {
+                        setOpen(false);
+                        router.push('/admin');
+                      }}
+                      className="w-full py-2.5 bg-accent text-white text-sm font-semibold rounded-lg transition-colors hover:bg-accent-hover"
+                    >
+                      Admin Panel
+                    </button>
+                  )}
+                  <button
+                    onClick={handleSignOut}
+                    className="w-full py-2.5 bg-zinc-800 border border-zinc-600 text-neutral-300 text-sm font-medium rounded-lg transition-colors hover:bg-zinc-700 hover:text-white hover:border-zinc-500"
+                  >
+                    Sign Out
+                  </button>
+                </div>
               ) : step === 'form' ? (
                 /* ── Sign-in / Sign-up form ────────────── */
                 <>

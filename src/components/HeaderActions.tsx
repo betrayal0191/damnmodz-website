@@ -63,12 +63,25 @@ export default function HeaderActions() {
 
       {/* Email + User dropdown (only when logged in) */}
       {loaded && user && (
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-neutral-400 truncate max-w-[180px]">
-            {user.email}
-          </span>
-          <UserDropdown />
-        </div>
+        <UserDropdown
+          renderTrigger={(toggle) => (
+            <button
+              onClick={toggle}
+              className="flex items-center gap-2 bg-transparent border-none cursor-pointer p-0 group"
+            >
+              <span className="text-sm text-neutral-400 truncate max-w-[180px] transition-colors group-hover:text-white">
+                {user.email}
+              </span>
+              <svg
+                viewBox="0 0 24 24"
+                className="w-[18px] h-[18px] fill-none stroke-neutral-400 stroke-2 [stroke-linecap:round] [stroke-linejoin:round] transition-colors group-hover:stroke-white"
+              >
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </button>
+          )}
+        />
       )}
 
       {/* Wishlist — only when logged in */}

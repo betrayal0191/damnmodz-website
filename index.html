@@ -9,12 +9,12 @@
 <body>
     <header>
         <div class="logo">
-            <a href="/">
+            <a href="/" data-content="logo">
                 <span class="logo-damn">DAMN</span><span class="logo-modz">MODZ</span>
             </a>
         </div>
 
-        <nav>
+        <nav data-content="nav">
             <a href="/browse-games/">Browse Games</a>
             <a href="/blog/">Blog</a>
             <a href="/affiliate-program/">Affiliate Program</a>
@@ -40,7 +40,7 @@
 
     <main class="hero-section">
         <!-- Featured Game Banner -->
-        <div class="featured-banner">
+        <div class="featured-banner" data-content="featured-banner">
             <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1200&h=500&fit=crop" alt="Dead Island 2" class="banner-image">
             <div class="banner-overlay">
                 <img src="/img/dead-island-2-logo.png" alt="Dead Island 2 Logo" class="banner-logo">
@@ -65,7 +65,7 @@
         </div>
 
         <!-- Discounted Games Sidebar -->
-        <aside class="discounted-sidebar">
+        <aside class="discounted-sidebar" data-content="discounted-sidebar">
             <div class="sidebar-header">
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="10"></circle>
@@ -133,5 +133,7 @@
             </div>
         </aside>
     </main>
+
+    <script src="/js/content-loader.js"></script>
 </body>
 </html>

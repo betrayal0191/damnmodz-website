@@ -217,33 +217,13 @@ export default function UserDropdown({ renderTrigger, mode = 'signin' }: UserDro
                   </svg>
                 </div>
               ) : user ? (
-                /* ── Logged-in state ──────────────────── */
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
-                      <svg
-                        viewBox="0 0 24 24"
-                        className="w-4 h-4 fill-none stroke-accent stroke-2 [stroke-linecap:round] [stroke-linejoin:round]"
-                      >
-                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-                        <circle cx="12" cy="7" r="4" />
-                      </svg>
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-sm text-white font-medium truncate">
-                        {user.email}
-                      </p>
-                      <p className="text-xs text-neutral-500">Signed in</p>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={handleSignOut}
-                    className="w-full py-2.5 bg-zinc-800 border border-zinc-600 text-neutral-300 text-sm font-medium rounded-lg transition-colors hover:bg-zinc-700 hover:text-white hover:border-zinc-500"
-                  >
-                    Sign Out
-                  </button>
-                </div>
+                /* ── Logged-in state — sign out only ──── */
+                <button
+                  onClick={handleSignOut}
+                  className="w-full py-2.5 bg-zinc-800 border border-zinc-600 text-neutral-300 text-sm font-medium rounded-lg transition-colors hover:bg-zinc-700 hover:text-white hover:border-zinc-500"
+                >
+                  Sign Out
+                </button>
               ) : step === 'form' ? (
                 /* ── Sign-in / Sign-up form ────────────── */
                 <>

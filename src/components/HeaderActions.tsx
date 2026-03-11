@@ -61,8 +61,15 @@ export default function HeaderActions() {
         </div>
       )}
 
-      {/* User dropdown (only when logged in — shows account info) */}
-      {loaded && user && <UserDropdown />}
+      {/* Email + User dropdown (only when logged in) */}
+      {loaded && user && (
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-neutral-400 truncate max-w-[180px]">
+            {user.email}
+          </span>
+          <UserDropdown />
+        </div>
+      )}
 
       {/* Wishlist — only when logged in */}
       {loaded && user && (

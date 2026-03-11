@@ -29,7 +29,13 @@ const inputCls =
 
 const textareaCls = `${inputCls} resize-y min-h-[80px]`;
 
+const TABS = ['Basic', 'Parameters', 'Payment', 'Notifications', 'Restrictions'] as const;
+type Tab = (typeof TABS)[number];
+
 export default function AddProductModal({ open, onClose, onSuccess }: AddProductModalProps) {
+  /* ── Tab state ──────────────────────────────────────── */
+  const [activeTab, setActiveTab] = useState<Tab>('Basic');
+
   /* ── Form state ─────────────────────────────────────── */
   const [title, setTitle] = useState('');
   const [price, setPrice] = useState('');
@@ -49,6 +55,7 @@ export default function AddProductModal({ open, onClose, onSuccess }: AddProduct
   /* ── Reset form when modal opens ────────────────────── */
   useEffect(() => {
     if (open) {
+      setActiveTab('Basic');
       setTitle('');
       setPrice('');
       setCategory('');
@@ -130,23 +137,49 @@ export default function AddProductModal({ open, onClose, onSuccess }: AddProduct
 
       {/* ── Panel ─────────────────────────────────────── */}
       <div className="relative w-full max-w-2xl mx-4 my-8 max-h-[calc(100vh-4rem)] overflow-y-auto bg-dark-header border border-dark-border rounded-xl shadow-2xl">
-        {/* ── Header ──────────────────────────────────── */}
-        <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 bg-dark-header border-b border-dark-border rounded-t-xl">
-          <h2 className="text-lg font-bold text-white">Add Product</h2>
-          <button
-            type="button"
-            onClick={onClose}
-            className="p-1.5 text-neutral-400 hover:text-white transition-colors rounded-lg hover:bg-white/10"
-          >
-            <svg viewBox="0 0 24 24" className="w-5 h-5 fill-none stroke-current stroke-2 [stroke-linecap:round] [stroke-linejoin:round]">
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          </button>
+        {/* ── Header + Tabs ───────────────────────────── */}
+        <div className="sticky top-0 z-10 bg-dark-header rounded-t-xl">
+          <div className="flex items-center justify-between px-6 py-4">
+            <h2 className="text-lg font-bold text-white">Add Product</h2>
+            <button
+              type="button"
+              onClick={onClose}
+              className="p-1.5 text-neutral-400 hover:text-white transition-colors rounded-lg hover:bg-white/10"
+            >
+              <svg viewBox="0 0 24 24" className="w-5 h-5 fill-none stroke-current stroke-2 [stroke-linecap:round] [stroke-linejoin:round]">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+
+          {/* ── Tab bar ─────────────────────────────────── */}
+          <div className="flex px-6 gap-1 border-b border-dark-border">
+            {TABS.map((tab) => (
+              <button
+                key={tab}
+                type="button"
+                onClick={() => setActiveTab(tab)}
+                className={`px-3 py-2 text-sm font-medium transition-colors relative ${
+                  activeTab === tab
+                    ? 'text-accent'
+                    : 'text-neutral-400 hover:text-white'
+                }`}
+              >
+                {tab}
+                {activeTab === tab && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent rounded-t" />
+                )}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* ── Form ────────────────────────────────────── */}
         <form onSubmit={handleSubmit} className="px-6 py-5 space-y-5">
+          {/* ── Basic tab ─────────────────────────────── */}
+          {activeTab === 'Basic' && (
+          <>
           {/* Thumbnail */}
           <div>
             <Label>Product Thumbnail</Label>
@@ -276,6 +309,36 @@ export default function AddProductModal({ open, onClose, onSuccess }: AddProduct
             <Label required>Languages</Label>
             <LanguageTagInput value={languages} onChange={setLanguages} />
           </div>
+          </>
+          )}
+
+          {/* ── Parameters tab ────────────────────────── */}
+          {activeTab === 'Parameters' && (
+            <div className="py-8 text-center">
+              <p className="text-neutral-500 text-sm">Parameters settings will be available here.</p>
+            </div>
+          )}
+
+          {/* ── Payment tab ───────────────────────────── */}
+          {activeTab === 'Payment' && (
+            <div className="py-8 text-center">
+              <p className="text-neutral-500 text-sm">Payment settings will be available here.</p>
+            </div>
+          )}
+
+          {/* ── Notifications tab ─────────────────────── */}
+          {activeTab === 'Notifications' && (
+            <div className="py-8 text-center">
+              <p className="text-neutral-500 text-sm">Notification settings will be available here.</p>
+            </div>
+          )}
+
+          {/* ── Restrictions tab ──────────────────────── */}
+          {activeTab === 'Restrictions' && (
+            <div className="py-8 text-center">
+              <p className="text-neutral-500 text-sm">Restriction settings will be available here.</p>
+            </div>
+          )}
 
           {/* Error */}
           {error && (

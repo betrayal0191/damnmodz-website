@@ -2,13 +2,36 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { isOwner } from '@/lib/auth/owner';
-import { ITEM_TYPES, type CreateProductInput } from '@/types/product';
+import { ITEM_TYPES, type Product, type CreateProductInput } from '@/types/product';
 
 interface ActionResult {
   success: boolean;
   error?: string;
 }
 
+interface GetProductsResult {
+  products: Product[];
+  error?: string;
+}
+
+/* ── Fetch all products (newest first) ──────────────────── */
+export async function getProducts(): Promise<GetProductsResult> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('[getProducts]', error);
+    return { products: [], error: error.message };
+  }
+
+  return { products: (data ?? []) as Product[] };
+}
+
+/* ── Create a new product ───────────────────────────────── */
 export async function createProduct(input: CreateProductInput): Promise<ActionResult> {
   /* ── Auth guard ──────────────────────────────────────── */
   const supabase = await createClient();

@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import AddProductModal from '@/components/admin/AddProductModal';
+import ProductDetailModal from '@/components/admin/ProductDetailModal';
 import { getProducts } from './actions';
 import type { Product } from '@/types/product';
 
@@ -16,6 +17,7 @@ export default function AdminProductsPage() {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState<number>(20);
   const [total, setTotal] = useState(0);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const totalPages = Math.max(1, Math.ceil(total / perPage));
 
@@ -155,7 +157,8 @@ export default function AdminProductsPage() {
               {products.map((product) => (
                 <tr
                   key={product.id}
-                  className="hover:bg-white/[0.02] transition-colors"
+                  onClick={() => setSelectedProduct(product)}
+                  className="hover:bg-white/[0.02] transition-colors cursor-pointer"
                 >
                   {/* ── Product (image + title) ──────── */}
                   <td className="px-5 py-3">
@@ -321,6 +324,13 @@ export default function AdminProductsPage() {
           </div>
         </div>
       )}
+
+      {/* ── Product Detail Modal ───────────────────────── */}
+      <ProductDetailModal
+        product={selectedProduct}
+        open={selectedProduct !== null}
+        onClose={() => setSelectedProduct(null)}
+      />
 
       {/* ── Add Product Modal ──────────────────────────── */}
       <AddProductModal

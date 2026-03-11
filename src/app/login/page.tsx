@@ -1,6 +1,7 @@
+import { Suspense } from 'react';
 import Link from 'next/link';
 import EmailMagicLinkForm from '@/components/auth/EmailMagicLinkForm';
-import PasskeyLoginButton from '@/components/auth/PasskeyLoginButton';
+import AuthErrorBanner from '@/components/auth/AuthErrorBanner';
 
 export const metadata = {
   title: 'Login — DamnModz',
@@ -19,20 +20,15 @@ export default function LoginPage() {
           <p className="text-neutral-500 text-sm mt-2">Sign in to your account</p>
         </div>
 
+        {/* Auth Error (e.g. expired magic link) */}
+        <Suspense>
+          <AuthErrorBanner />
+        </Suspense>
+
         {/* Login Card */}
         <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-6 space-y-6">
           {/* Email Magic Link Form */}
           <EmailMagicLinkForm />
-
-          {/* Divider */}
-          <div className="flex items-center gap-3">
-            <div className="flex-1 h-px bg-zinc-700" />
-            <span className="text-xs text-neutral-500 uppercase tracking-wider">or</span>
-            <div className="flex-1 h-px bg-zinc-700" />
-          </div>
-
-          {/* Passkey Login */}
-          <PasskeyLoginButton />
         </div>
 
         {/* Link to Sign Up */}

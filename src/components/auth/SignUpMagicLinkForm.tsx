@@ -34,9 +34,6 @@ export default function SignUpMagicLinkForm() {
       return;
     }
 
-    // Mark as first-time sign-up so the passkey enrollment banner shows
-    localStorage.setItem('damnmodz_first_login', 'true');
-
     setStep('sent');
   };
 

@@ -5,17 +5,20 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
 import UserDropdown from '@/components/UserDropdown';
+import { isAdmin } from '@/lib/auth/admin';
 
 interface HeaderActionsProps {
   initialEmail: string | null;
+  initialIsAdmin: boolean;
 }
 
-export default function HeaderActions({ initialEmail }: HeaderActionsProps) {
+export default function HeaderActions({ initialEmail, initialIsAdmin }: HeaderActionsProps) {
   const supabase = createClient();
   const [user, setUser] = useState<User | null>(
     initialEmail ? ({ email: initialEmail } as User) : null
   );
   const [loaded, setLoaded] = useState(!!initialEmail);
+  const [admin, setAdmin] = useState(initialIsAdmin);
 
   useEffect(() => {
     const getUser = async () => {
@@ -23,6 +26,7 @@ export default function HeaderActions({ initialEmail }: HeaderActionsProps) {
         data: { user: currentUser },
       } = await supabase.auth.getUser();
       setUser(currentUser);
+      setAdmin(isAdmin(currentUser));
       setLoaded(true);
     };
     getUser();
@@ -31,6 +35,7 @@ export default function HeaderActions({ initialEmail }: HeaderActionsProps) {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
+      setAdmin(isAdmin(session?.user ?? null));
     });
 
     return () => subscription.unsubscribe();

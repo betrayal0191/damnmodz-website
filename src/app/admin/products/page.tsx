@@ -1,13 +1,20 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import AddProductModal from '@/components/admin/AddProductModal';
 import ProductDetailModal from '@/components/admin/ProductDetailModal';
-import { getProducts } from './actions';
+import { getProducts, deleteProduct } from './actions';
 import type { Product } from '@/types/product';
 
 const PER_PAGE_OPTIONS = [20, 50, 100, 200] as const;
+
+/* ── Toast type ──────────────────────────────────────────── */
+interface Toast {
+  id: number;
+  type: 'success' | 'error';
+  message: string;
+}
 
 export default function AdminProductsPage() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -19,6 +26,26 @@ export default function AdminProductsPage() {
   const [total, setTotal] = useState(0);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [editProduct, setEditProduct] = useState<Product | null>(null);
+
+  /* ── Delete state ──────────────────────────────────────── */
+  const [confirmDelete, setConfirmDelete] = useState<Product | null>(null);
+  const [deleting, setDeleting] = useState(false);
+
+  /* ── Toast state ───────────────────────────────────────── */
+  const [toasts, setToasts] = useState<Toast[]>([]);
+  const toastIdRef = useRef(0);
+
+  const addToast = useCallback((type: 'success' | 'error', message: string) => {
+    const id = ++toastIdRef.current;
+    setToasts((prev) => [...prev, { id, type, message }]);
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, 4000);
+  }, []);
+
+  const removeToast = useCallback((id: number) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  }, []);
 
   const totalPages = Math.max(1, Math.ceil(total / perPage));
 
@@ -54,6 +81,21 @@ export default function AdminProductsPage() {
       day: 'numeric',
       year: 'numeric',
     });
+
+  /* ── Handle delete ─────────────────────────────────────── */
+  const handleConfirmDelete = async () => {
+    if (!confirmDelete) return;
+    setDeleting(true);
+    const result = await deleteProduct(confirmDelete.id);
+    setDeleting(false);
+    setConfirmDelete(null);
+    if (result.success) {
+      addToast('success', `"${confirmDelete.title}" has been deleted.`);
+      fetchProducts();
+    } else {
+      addToast('error', result.error ?? 'Failed to delete product.');
+    }
+  };
 
   /* ── Pagination range (show at most 5 page buttons) ──── */
   const getPageRange = (): number[] => {
@@ -152,6 +194,7 @@ export default function AdminProductsPage() {
                 <th className="px-5 py-3 font-medium text-right">Price</th>
                 <th className="px-5 py-3 font-medium">Languages</th>
                 <th className="px-5 py-3 font-medium">Created</th>
+                <th className="w-10"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-dark-border">
@@ -159,7 +202,7 @@ export default function AdminProductsPage() {
                 <tr
                   key={product.id}
                   onClick={() => setSelectedProduct(product)}
-                  className="hover:bg-white/[0.02] transition-colors cursor-pointer"
+                  className="group hover:bg-white/[0.02] transition-colors cursor-pointer"
                 >
                   {/* ── Product (image + title) ──────── */}
                   <td className="px-5 py-3">
@@ -228,6 +271,25 @@ export default function AdminProductsPage() {
                   {/* ── Created date ──────────────────── */}
                   <td className="px-5 py-3">
                     <span className="text-neutral-400 text-sm">{formatDate(product.created_at)}</span>
+                  </td>
+
+                  {/* ── Delete button (visible on hover) ── */}
+                  <td className="px-2 py-3">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setConfirmDelete(product);
+                      }}
+                      title="Delete product"
+                      className="opacity-0 group-hover:opacity-100 flex items-center justify-center w-8 h-8 rounded-md text-neutral-500 transition-all hover:text-red-400 hover:bg-red-400/10"
+                    >
+                      <svg viewBox="0 0 24 24" className="w-4 h-4 fill-none stroke-current stroke-2 [stroke-linecap:round] [stroke-linejoin:round]">
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
+                        <line x1="10" y1="11" x2="10" y2="17" />
+                        <line x1="14" y1="11" x2="14" y2="17" />
+                      </svg>
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -351,6 +413,83 @@ export default function AdminProductsPage() {
           fetchProducts();
         }}
       />
+
+      {/* ── Delete Confirmation Dialog ──────────────────── */}
+      {confirmDelete && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center">
+          <div
+            className="absolute inset-0 bg-black/60"
+            onClick={() => !deleting && setConfirmDelete(null)}
+          />
+          <div className="relative bg-dark-card border border-dark-border rounded-xl p-6 w-full max-w-sm shadow-2xl">
+            <h3 className="text-white font-semibold text-lg mb-2">Delete Product</h3>
+            <p className="text-neutral-400 text-sm mb-5">
+              Are you sure you want to delete{' '}
+              <span className="text-white font-medium">&quot;{confirmDelete.title}&quot;</span>?
+              This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => setConfirmDelete(null)}
+                disabled={deleting}
+                className="px-4 py-2 text-sm font-medium text-neutral-300 rounded-lg border border-dark-border transition-colors hover:bg-white/5 disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmDelete}
+                disabled={deleting}
+                className="px-4 py-2 text-sm font-semibold text-white rounded-lg bg-red-600 transition-colors hover:bg-red-700 disabled:opacity-50 flex items-center gap-2"
+              >
+                {deleting && (
+                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                )}
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Toast notifications (top-left) ─────────────── */}
+      <div className="fixed top-4 left-4 z-[80] flex flex-col gap-2 pointer-events-none">
+        {toasts.map((toast) => (
+          <div
+            key={toast.id}
+            className={`pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg border text-sm font-medium animate-[slideIn_0.3s_ease-out] ${
+              toast.type === 'success'
+                ? 'bg-green-500/10 border-green-500/30 text-green-400'
+                : 'bg-red-500/10 border-red-500/30 text-red-400'
+            }`}
+          >
+            {toast.type === 'success' ? (
+              <svg viewBox="0 0 24 24" className="w-4 h-4 fill-none stroke-current stroke-2 [stroke-linecap:round] [stroke-linejoin:round] flex-shrink-0">
+                <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" className="w-4 h-4 fill-none stroke-current stroke-2 [stroke-linecap:round] [stroke-linejoin:round] flex-shrink-0">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="15" y1="9" x2="9" y2="15" />
+                <line x1="9" y1="9" x2="15" y2="15" />
+              </svg>
+            )}
+            <span>{toast.message}</span>
+            <button
+              onClick={() => removeToast(toast.id)}
+              className="ml-2 text-current opacity-60 hover:opacity-100 transition-opacity"
+            >
+              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-none stroke-current stroke-2 [stroke-linecap:round] [stroke-linejoin:round]">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+        ))}
+      </div>
     </main>
   );
 }

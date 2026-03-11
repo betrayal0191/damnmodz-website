@@ -10,3 +10,15 @@
 .animate-slide-up-4 {
   opacity: 0;
 }
+
+/* Toast slide-in animation */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

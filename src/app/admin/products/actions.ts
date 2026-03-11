@@ -169,3 +169,31 @@ export async function updateProduct(id: string, input: CreateProductInput): Prom
 
   return { success: true };
 }
+
+/* ── Delete a product ───────────────────────────────────── */
+export async function deleteProduct(id: string): Promise<ActionResult> {
+  /* ── Auth guard ──────────────────────────────────────── */
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user || !isOwner(user)) {
+    return { success: false, error: 'Unauthorized' };
+  }
+
+  if (!id) {
+    return { success: false, error: 'Product ID is required.' };
+  }
+
+  /* ── Delete ──────────────────────────────────────────── */
+  const { error } = await supabase
+    .from('products')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    console.error('[deleteProduct]', error);
+    return { success: false, error: error.message };
+  }
+
+  return { success: true };
+}

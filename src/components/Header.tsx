@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import content from '@/data/content.json';
 import HeaderActions from '@/components/HeaderActions';
+import { createClient } from '@/lib/supabase/server';
 
 /* ── Social icon SVGs ─────────────────────────────────── */
 function InstagramIcon() {
@@ -42,7 +43,9 @@ const socialIcons: Record<string, () => JSX.Element> = {
   discord: DiscordIcon,
 };
 
-export default function Header() {
+export default async function Header() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
   const { logo, nav, social } = content.header;
 
   return (
@@ -117,7 +120,7 @@ export default function Header() {
         </div>
 
         {/* ── Right Icons (Sign In text + User + Wishlist + Cart) ── */}
-        <HeaderActions />
+        <HeaderActions initialEmail={user?.email ?? null} />
       </div>
     </header>
   );

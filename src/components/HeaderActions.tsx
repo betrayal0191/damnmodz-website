@@ -6,10 +6,16 @@ import { createClient } from '@/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
 import UserDropdown from '@/components/UserDropdown';
 
-export default function HeaderActions() {
+interface HeaderActionsProps {
+  initialEmail: string | null;
+}
+
+export default function HeaderActions({ initialEmail }: HeaderActionsProps) {
   const supabase = createClient();
-  const [user, setUser] = useState<User | null>(null);
-  const [loaded, setLoaded] = useState(false);
+  const [user, setUser] = useState<User | null>(
+    initialEmail ? ({ email: initialEmail } as User) : null
+  );
+  const [loaded, setLoaded] = useState(!!initialEmail);
 
   useEffect(() => {
     const getUser = async () => {

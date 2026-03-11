@@ -154,6 +154,15 @@ nav a:hover {
     z-index: 1;
 }
 
+.banner-logo {
+    display: block;
+    max-width: 220px;
+    height: auto;
+    margin-bottom: 12px;
+    animation: slideUp 0.6s ease-out both;
+    animation-delay: 0s;
+}
+
 .banner-title {
     font-size: 28px;
     font-weight: 700;

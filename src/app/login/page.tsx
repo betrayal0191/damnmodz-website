@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import EmailOtpForm from '@/components/auth/EmailOtpForm';
+import EmailMagicLinkForm from '@/components/auth/EmailMagicLinkForm';
 import PasskeyLoginButton from '@/components/auth/PasskeyLoginButton';
 
 export const metadata = {
@@ -21,8 +21,8 @@ export default function LoginPage() {
 
         {/* Login Card */}
         <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-6 space-y-6">
-          {/* Email OTP Form */}
-          <EmailOtpForm />
+          {/* Email Magic Link Form */}
+          <EmailMagicLinkForm />
 
           {/* Divider */}
           <div className="flex items-center gap-3">

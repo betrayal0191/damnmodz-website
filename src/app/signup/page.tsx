@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import SignUpOtpForm from '@/components/auth/SignUpOtpForm';
+import SignUpMagicLinkForm from '@/components/auth/SignUpMagicLinkForm';
 
 export const metadata = {
   title: 'Sign Up — DamnModz',
@@ -20,8 +20,8 @@ export default function SignUpPage() {
 
         {/* Sign Up Card */}
         <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-6 space-y-6">
-          {/* Email OTP Form */}
-          <SignUpOtpForm />
+          {/* Email Magic Link Form */}
+          <SignUpMagicLinkForm />
         </div>
 
         {/* Link to Login */}

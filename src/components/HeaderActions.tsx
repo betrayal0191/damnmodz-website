@@ -32,8 +32,8 @@ export default function HeaderActions() {
 
   return (
     <div className="flex items-center gap-5">
-      {/* Sign In (with dropdown) / Sign Up — only when NOT logged in */}
-      {loaded && !user && (
+      {/* Sign In (with dropdown) / Sign Up — shown immediately, hidden once logged in */}
+      {!user && (
         <div className="flex items-center gap-0 whitespace-nowrap">
           <UserDropdown
             mode="signin"

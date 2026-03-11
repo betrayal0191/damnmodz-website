@@ -80,6 +80,11 @@ export default function HeaderActions({ initialEmail, initialIsAdmin }: HeaderAc
               onClick={toggle}
               className="flex items-center gap-2 bg-transparent border-none cursor-pointer p-0 group"
             >
+              {admin && (
+                <span className="text-xs font-semibold text-accent bg-accent/15 px-2 py-0.5 rounded-full">
+                  Admin
+                </span>
+              )}
               <span className="text-sm text-neutral-400 truncate max-w-[180px] transition-colors group-hover:text-white">
                 {user.email}
               </span>

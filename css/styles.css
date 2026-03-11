@@ -120,7 +120,7 @@ nav a:hover {
 .hero-section {
     display: flex;
     gap: 20px;
-    padding: 20px 40px;
+    padding: 30px 40px;
     max-width: 1400px;
     margin: 0 auto;
 }
@@ -160,6 +160,8 @@ nav a:hover {
     color: #ffffff;
     margin-bottom: 12px;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.6s ease-out both;
+    animation-delay: 0.1s;
 }
 
 .platform-badges {
@@ -169,6 +171,8 @@ nav a:hover {
     margin-bottom: 10px;
     font-size: 12px;
     color: #cccccc;
+    animation: slideUp 0.6s ease-out both;
+    animation-delay: 0.25s;
 }
 
 .platform-badges .badge {
@@ -188,12 +192,16 @@ nav a:hover {
     line-height: 1.5;
     margin-bottom: 16px;
     max-width: 480px;
+    animation: slideUp 0.6s ease-out both;
+    animation-delay: 0.4s;
 }
 
 .banner-actions {
     display: flex;
     align-items: center;
     gap: 16px;
+    animation: slideUp 0.6s ease-out both;
+    animation-delay: 0.55s;
 }
 
 .cta-button {
@@ -333,4 +341,19 @@ nav a:hover {
     font-size: 12px;
     font-weight: 600;
     color: #8b5cf6;
+}
+
+/* ===========================
+   Animations
+   =========================== */
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

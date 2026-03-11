@@ -1,15 +1,20 @@
 {
     "header": {
         "logo": {
-            "text_left": "DAMN",
-            "text_right": "MODZ",
+            "text_left": "Damn",
+            "text_right": "Modz.",
             "href": "/"
         },
         "nav": [
-            { "label": "Browse Games", "href": "/browse-games" },
-            { "label": "Blog", "href": "/blog" },
-            { "label": "Affiliate Program", "href": "/affiliate-program" },
-            { "label": "Contact Us", "href": "/contact-us" }
+            { "label": "Home", "href": "/" },
+            { "label": "Games", "href": "/browse-games", "hasDropdown": true },
+            { "label": "Sale", "href": "/sale" }
+        ],
+        "social": [
+            { "label": "Instagram", "href": "https://instagram.com", "icon": "instagram" },
+            { "label": "YouTube", "href": "https://youtube.com", "icon": "youtube" },
+            { "label": "TikTok", "href": "https://tiktok.com", "icon": "tiktok" },
+            { "label": "Discord", "href": "https://discord.com", "icon": "discord" }
         ]
     },
 

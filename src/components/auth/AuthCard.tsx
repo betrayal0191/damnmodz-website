@@ -155,7 +155,7 @@ export default function AuthCard({ initialMode }: AuthCardProps) {
   const switchLabel = isLogin ? 'Sign up' : 'Log in';
 
   return (
-    <main className="min-h-[calc(100vh-50px)] flex items-center justify-center px-4">
+    <main className="min-h-[calc(100vh-60px)] flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="text-center mb-8">

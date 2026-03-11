@@ -1,4 +1,13 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import AddProductModal from '@/components/admin/AddProductModal';
+
 export default function AdminProductsPage() {
+  const router = useRouter();
+  const [modalOpen, setModalOpen] = useState(false);
+
   return (
     <main className="p-8">
       <div className="flex items-center justify-between mb-6">
@@ -8,7 +17,10 @@ export default function AdminProductsPage() {
             Manage your products here.
           </p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2.5 bg-accent text-white text-sm font-semibold rounded-lg transition-colors hover:bg-accent-hover">
+        <button
+          onClick={() => setModalOpen(true)}
+          className="flex items-center gap-2 px-4 py-2.5 bg-accent text-white text-sm font-semibold rounded-lg transition-colors hover:bg-accent-hover"
+        >
           <svg viewBox="0 0 24 24" className="w-4 h-4 fill-none stroke-current stroke-2 [stroke-linecap:round] [stroke-linejoin:round]">
             <line x1="12" y1="5" x2="12" y2="19" />
             <line x1="5" y1="12" x2="19" y2="12" />
@@ -26,6 +38,16 @@ export default function AdminProductsPage() {
         </svg>
         <p className="text-neutral-500 text-sm">No products yet. Click &quot;Add Product&quot; to create one.</p>
       </div>
+
+      {/* ── Add Product Modal ──────────────────────────── */}
+      <AddProductModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onSuccess={() => {
+          setModalOpen(false);
+          router.refresh();
+        }}
+      />
     </main>
   );
 }

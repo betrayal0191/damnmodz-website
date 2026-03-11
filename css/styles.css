@@ -20,7 +20,7 @@ header {
     padding: 0 40px;
     height: 50px;
     background-color: #1c1c1c;
-    border-bottom: 2px solid #e04040;
+    border-bottom: 2px solid #8b5cf6;
 }
 
 .logo {
@@ -40,7 +40,7 @@ header {
 }
 
 .logo-modz {
-    color: #e04040;
+    color: #8b5cf6;
 }
 
 nav {

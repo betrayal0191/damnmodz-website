@@ -10,9 +10,12 @@ export default function UserDropdown() {
   const supabase = createClient();
 
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [loadingUser, setLoadingUser] = useState(true);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   /* ── Form state ─────────────────────────────────────── */
   const [step, setStep] = useState<Step>('form');
@@ -66,14 +69,36 @@ export default function UserDropdown() {
     return () => document.removeEventListener('keydown', handleEsc);
   }, [open]);
 
-  /* ── Reset form when dropdown closes ────────────────── */
+  /* ── Animate open/close ─────────────────────────────── */
   useEffect(() => {
-    if (!open) {
-      setStep('form');
-      setEmail('');
-      setError('');
-      setGoogleError('');
+    if (open) {
+      // Clear any pending close timer
+      if (closeTimerRef.current) {
+        clearTimeout(closeTimerRef.current);
+        closeTimerRef.current = null;
+      }
+      // Mount first, then animate in
+      setMounted(true);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setVisible(true);
+        });
+      });
+    } else {
+      // Trigger exit animation
+      setVisible(false);
+      // After exit animation completes, unmount and reset form
+      closeTimerRef.current = setTimeout(() => {
+        setMounted(false);
+        setStep('form');
+        setEmail('');
+        setError('');
+        setGoogleError('');
+      }, 200);
     }
+    return () => {
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    };
   }, [open]);
 
   /* ── Send Magic Link ────────────────────────────────── */
@@ -147,14 +172,15 @@ export default function UserDropdown() {
       </button>
 
       {/* Dropdown Panel */}
-      {open && (
+      {mounted && (
         <div
-          className="absolute top-full right-0 mt-3 w-72 z-50"
+          className={`absolute top-full -right-6 mt-5 w-72 z-50 transition-all duration-200 ease-out origin-top-right ${
+            visible
+              ? 'opacity-100 scale-100 translate-y-0'
+              : 'opacity-0 scale-95 -translate-y-1'
+          }`}
           style={{ filter: 'drop-shadow(0 8px 24px rgba(0,0,0,0.5))' }}
         >
-          {/* Arrow */}
-          <div className="absolute -top-2 right-3 w-4 h-4 bg-zinc-900 border-l border-t border-zinc-700 rotate-45" />
-
           {/* Panel body */}
           <div className="bg-zinc-900 border border-zinc-700 rounded-lg overflow-hidden">
             <div className="p-5 space-y-4">
@@ -393,3 +419,4 @@ export default function UserDropdown() {
     </div>
   );
 }
+

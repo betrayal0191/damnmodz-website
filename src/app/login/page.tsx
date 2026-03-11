@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import EmailOtpForm from '@/components/auth/EmailOtpForm';
 import PasskeyLoginButton from '@/components/auth/PasskeyLoginButton';
 
@@ -33,6 +34,14 @@ export default function LoginPage() {
           {/* Passkey Login */}
           <PasskeyLoginButton />
         </div>
+
+        {/* Link to Sign Up */}
+        <p className="text-center text-sm text-neutral-500 mt-6">
+          Don&apos;t have an account?{' '}
+          <Link href="/signup" className="text-accent hover:text-accent-hover transition-colors font-medium">
+            Sign up
+          </Link>
+        </p>
       </div>
     </main>
   );

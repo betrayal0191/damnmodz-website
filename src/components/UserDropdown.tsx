@@ -9,9 +9,11 @@ type Step = 'form' | 'sent';
 interface UserDropdownProps {
   /** Render prop for the trigger element. Receives toggle + open state. */
   renderTrigger?: (toggle: () => void, isOpen: boolean) => ReactNode;
+  /** Mode: 'signin' (default) or 'signup' — adapts labels and text. */
+  mode?: 'signin' | 'signup';
 }
 
-export default function UserDropdown({ renderTrigger }: UserDropdownProps) {
+export default function UserDropdown({ renderTrigger, mode = 'signin' }: UserDropdownProps) {
   const supabase = createClient();
 
   const [open, setOpen] = useState(false);
@@ -184,7 +186,7 @@ export default function UserDropdown({ renderTrigger }: UserDropdownProps) {
       {/* Dropdown Panel */}
       {mounted && (
         <div
-          className={`absolute top-full -right-6 mt-5 w-72 z-50 transition-all duration-200 ease-out origin-top-right ${
+          className={`absolute top-full -right-6 mt-7 w-72 z-50 transition-all duration-200 ease-out origin-top-right ${
             visible
               ? 'opacity-100 scale-100 translate-y-0'
               : 'opacity-0 scale-95 -translate-y-1'
@@ -243,22 +245,22 @@ export default function UserDropdown({ renderTrigger }: UserDropdownProps) {
                   </button>
                 </div>
               ) : step === 'form' ? (
-                /* ── Sign-in form ─────────────────────── */
+                /* ── Sign-in / Sign-up form ────────────── */
                 <>
                   <p className="text-sm font-medium text-white text-center">
-                    Sign In
+                    {mode === 'signup' ? 'Sign Up' : 'Sign In'}
                   </p>
 
                   <form onSubmit={handleSendLink} className="space-y-3">
                     <div>
                       <label
-                        htmlFor="dropdown-email"
+                        htmlFor={`dropdown-email-${mode}`}
                         className="block text-xs font-medium text-neutral-400 mb-1"
                       >
                         Email Address:
                       </label>
                       <input
-                        id="dropdown-email"
+                        id={`dropdown-email-${mode}`}
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -297,7 +299,7 @@ export default function UserDropdown({ renderTrigger }: UserDropdownProps) {
                           Sending...
                         </span>
                       ) : (
-                        'Send Magic Link'
+                        mode === 'signup' ? 'Create Account' : 'Send Magic Link'
                       )}
                     </button>
                   </form>
@@ -359,7 +361,7 @@ export default function UserDropdown({ renderTrigger }: UserDropdownProps) {
                               fill="#EA4335"
                             />
                           </svg>
-                          Continue with Google
+                          {mode === 'signup' ? 'Sign up with Google' : 'Continue with Google'}
                         </>
                       )}
                     </button>
@@ -369,15 +371,29 @@ export default function UserDropdown({ renderTrigger }: UserDropdownProps) {
                     )}
                   </div>
 
-                  {/* Sign up link */}
+                  {/* Toggle link */}
                   <p className="text-center text-xs text-neutral-500">
-                    Don&apos;t have an account?{' '}
-                    <a
-                      href="/signup"
-                      className="text-accent hover:text-accent-hover transition-colors font-medium"
-                    >
-                      Sign up
-                    </a>
+                    {mode === 'signup' ? (
+                      <>
+                        Already have an account?{' '}
+                        <a
+                          href="/login"
+                          className="text-accent hover:text-accent-hover transition-colors font-medium"
+                        >
+                          Sign in
+                        </a>
+                      </>
+                    ) : (
+                      <>
+                        Don&apos;t have an account?{' '}
+                        <a
+                          href="/signup"
+                          className="text-accent hover:text-accent-hover transition-colors font-medium"
+                        >
+                          Sign up
+                        </a>
+                      </>
+                    )}
                   </p>
                 </>
               ) : (
@@ -401,13 +417,17 @@ export default function UserDropdown({ renderTrigger }: UserDropdownProps) {
 
                   <div>
                     <p className="text-xs text-neutral-400">
-                      We sent a login link to
+                      {mode === 'signup'
+                        ? 'We sent a confirmation link to'
+                        : 'We sent a login link to'}
                     </p>
                     <p className="text-sm text-white font-medium mt-0.5">{email}</p>
                   </div>
 
                   <p className="text-xs text-neutral-500">
-                    Check your inbox and click the link to sign in.
+                    {mode === 'signup'
+                      ? 'Check your inbox and click the link to complete sign up.'
+                      : 'Check your inbox and click the link to sign in.'}
                   </p>
 
                   <button

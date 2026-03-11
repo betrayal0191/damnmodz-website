@@ -36,6 +36,7 @@ export default function HeaderActions() {
       {loaded && !user && (
         <div className="flex items-center gap-0 whitespace-nowrap">
           <UserDropdown
+            mode="signin"
             renderTrigger={(toggle) => (
               <button
                 onClick={toggle}
@@ -46,14 +47,17 @@ export default function HeaderActions() {
             )}
           />
           <span className="text-sm text-neutral-400 mx-1">/</span>
-          <button
-            onClick={() => {
-              /* Sign Up — no dropdown for now */
-            }}
-            className="bg-transparent border-none cursor-pointer text-sm text-neutral-400 hover:text-white transition-colors"
-          >
-            Sign Up
-          </button>
+          <UserDropdown
+            mode="signup"
+            renderTrigger={(toggle) => (
+              <button
+                onClick={toggle}
+                className="bg-transparent border-none cursor-pointer text-sm text-neutral-400 hover:text-white transition-colors"
+              >
+                Sign Up
+              </button>
+            )}
+          />
         </div>
       )}
 

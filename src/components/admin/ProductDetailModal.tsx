@@ -8,9 +8,10 @@ interface ProductDetailModalProps {
   product: Product | null;
   open: boolean;
   onClose: () => void;
+  onEdit?: (product: Product) => void;
 }
 
-export default function ProductDetailModal({ product, open, onClose }: ProductDetailModalProps) {
+export default function ProductDetailModal({ product, open, onClose, onEdit }: ProductDetailModalProps) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   /* ── Close on Escape ─────────────────────────────────── */
   useEffect(() => {
@@ -70,15 +71,29 @@ export default function ProductDetailModal({ product, open, onClose }: ProductDe
         {/* ── Header ─────────────────────────────────── */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-dark-border">
           <h2 className="text-lg font-bold text-white truncate pr-4">Product Details</h2>
-          <button
-            onClick={onClose}
-            className="flex items-center justify-center w-8 h-8 rounded-lg text-neutral-400 hover:text-white hover:bg-white/5 transition-colors"
-          >
+          <div className="flex items-center gap-2">
+            {onEdit && product && (
+              <button
+                onClick={() => onEdit(product)}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-accent bg-accent/10 rounded-lg hover:bg-accent/20 transition-colors"
+              >
+                <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-none stroke-current stroke-2 [stroke-linecap:round] [stroke-linejoin:round]">
+                  <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                  <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                </svg>
+                Edit
+              </button>
+            )}
+            <button
+              onClick={onClose}
+              className="flex items-center justify-center w-8 h-8 rounded-lg text-neutral-400 hover:text-white hover:bg-white/5 transition-colors"
+            >
             <svg viewBox="0 0 24 24" className="w-5 h-5 fill-none stroke-current stroke-2 [stroke-linecap:round] [stroke-linejoin:round]">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
-          </button>
+            </button>
+          </div>
         </div>
 
         {/* ── Body (scrollable) ──────────────────────── */}

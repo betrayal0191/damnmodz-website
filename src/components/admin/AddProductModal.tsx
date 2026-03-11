@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback, type FormEvent } from 'react';
-import { ITEM_TYPES, type ItemType, type CreateProductInput } from '@/types/product';
-import { createProduct } from '@/app/admin/products/actions';
+import { ITEM_TYPES, type ItemType, type Product, type CreateProductInput } from '@/types/product';
+import { createProduct, updateProduct } from '@/app/admin/products/actions';
 import RichTextEditor from './RichTextEditor';
 import LanguageTagInput from './LanguageTagInput';
 import ImageUpload from './ImageUpload';
@@ -11,6 +11,8 @@ interface AddProductModalProps {
   open: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  /** When provided, the modal operates in "edit" mode with prefilled data */
+  product?: Product | null;
 }
 
 /* ── Shared field label ─────────────────────────────── */
@@ -32,7 +34,8 @@ const textareaCls = `${inputCls} resize-y min-h-[80px]`;
 const TABS = ['Basic', 'Parameters', 'Payment', 'Notifications', 'Restrictions'] as const;
 type Tab = (typeof TABS)[number];
 
-export default function AddProductModal({ open, onClose, onSuccess }: AddProductModalProps) {
+export default function AddProductModal({ open, onClose, onSuccess, product: editProduct }: AddProductModalProps) {
+  const isEditMode = !!editProduct;
   /* ── Tab state ──────────────────────────────────────── */
   const [activeTab, setActiveTab] = useState<Tab>('Basic');
 
@@ -52,24 +55,38 @@ export default function AddProductModal({ open, onClose, onSuccess }: AddProduct
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
-  /* ── Reset form when modal opens ────────────────────── */
+  /* ── Reset / prefill form when modal opens ──────────── */
   useEffect(() => {
     if (open) {
       setActiveTab('Basic');
-      setTitle('');
-      setPrice('');
-      setCategory('');
-      setItemType('Key');
-      setAffiliateFee('');
-      setDescription('');
-      setContent('');
-      setAdditionalInfo('');
-      setActivationInstructions('');
-      setLanguages([]);
-      setImageUrl(null);
+      if (editProduct) {
+        setTitle(editProduct.title);
+        setPrice(String(editProduct.price));
+        setCategory(editProduct.category);
+        setItemType(editProduct.item_type);
+        setAffiliateFee(String(editProduct.affiliate_fee));
+        setDescription(editProduct.description);
+        setContent(editProduct.content);
+        setAdditionalInfo(editProduct.additional_info ?? '');
+        setActivationInstructions(editProduct.activation_instructions ?? '');
+        setLanguages(editProduct.languages);
+        setImageUrl(editProduct.image_url);
+      } else {
+        setTitle('');
+        setPrice('');
+        setCategory('');
+        setItemType('Key');
+        setAffiliateFee('');
+        setDescription('');
+        setContent('');
+        setAdditionalInfo('');
+        setActivationInstructions('');
+        setLanguages([]);
+        setImageUrl(null);
+      }
       setError('');
     }
-  }, [open]);
+  }, [open, editProduct]);
 
   /* ── Close on Escape ────────────────────────────────── */
   const handleEsc = useCallback(
@@ -116,7 +133,9 @@ export default function AddProductModal({ open, onClose, onSuccess }: AddProduct
       image_url: imageUrl,
     };
 
-    const result = await createProduct(input);
+    const result = isEditMode
+      ? await updateProduct(editProduct!.id, input)
+      : await createProduct(input);
 
     if (!result.success) {
       setError(result.error ?? 'Something went wrong.');
@@ -140,7 +159,7 @@ export default function AddProductModal({ open, onClose, onSuccess }: AddProduct
         {/* ── Header + Tabs ───────────────────────────── */}
         <div className="sticky top-0 z-10 bg-dark-header rounded-t-xl">
           <div className="flex items-center justify-between px-6 py-4">
-            <h2 className="text-lg font-bold text-white">Add Product</h2>
+            <h2 className="text-lg font-bold text-white">{isEditMode ? 'Edit Product' : 'Add Product'}</h2>
             <button
               type="button"
               onClick={onClose}
@@ -367,10 +386,10 @@ export default function AddProductModal({ open, onClose, onSuccess }: AddProduct
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
-                  Adding…
+                  {isEditMode ? 'Saving…' : 'Adding…'}
                 </>
               ) : (
-                'Add Product'
+                isEditMode ? 'Save Changes' : 'Add Product'
               )}
             </button>
           </div>

@@ -18,6 +18,7 @@ export default function AdminProductsPage() {
   const [perPage, setPerPage] = useState<number>(20);
   const [total, setTotal] = useState(0);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [editProduct, setEditProduct] = useState<Product | null>(null);
 
   const totalPages = Math.max(1, Math.ceil(total / perPage));
 
@@ -330,15 +331,23 @@ export default function AdminProductsPage() {
         product={selectedProduct}
         open={selectedProduct !== null}
         onClose={() => setSelectedProduct(null)}
+        onEdit={(p) => {
+          setSelectedProduct(null);
+          setEditProduct(p);
+        }}
       />
 
-      {/* ── Add Product Modal ──────────────────────────── */}
+      {/* ── Add / Edit Product Modal ───────────────────── */}
       <AddProductModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
+        open={modalOpen || editProduct !== null}
+        product={editProduct}
+        onClose={() => {
+          setModalOpen(false);
+          setEditProduct(null);
+        }}
         onSuccess={() => {
           setModalOpen(false);
-          setPage(1);
+          setEditProduct(null);
           fetchProducts();
         }}
       />

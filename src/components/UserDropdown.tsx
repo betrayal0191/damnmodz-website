@@ -1,12 +1,17 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, type ReactNode } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
 
 type Step = 'form' | 'sent';
 
-export default function UserDropdown() {
+interface UserDropdownProps {
+  /** Render prop for the trigger element. Receives toggle + open state. */
+  renderTrigger?: (toggle: () => void, isOpen: boolean) => ReactNode;
+}
+
+export default function UserDropdown({ renderTrigger }: UserDropdownProps) {
   const supabase = createClient();
 
   const [open, setOpen] = useState(false);
@@ -154,22 +159,27 @@ export default function UserDropdown() {
   /* ── Toggle ─────────────────────────────────────────── */
   const toggle = useCallback(() => setOpen((prev) => !prev), []);
 
+  /* ── Default trigger (user icon) ─────────────────────── */
+  const defaultTrigger = (
+    <button
+      aria-label="Account"
+      onClick={toggle}
+      className="bg-transparent border-none cursor-pointer p-1 flex items-center justify-center group"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        className="w-[18px] h-[18px] fill-none stroke-neutral-400 stroke-2 [stroke-linecap:round] [stroke-linejoin:round] transition-colors group-hover:stroke-white"
+      >
+        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+        <circle cx="12" cy="7" r="4" />
+      </svg>
+    </button>
+  );
+
   return (
     <div ref={dropdownRef} className="relative flex items-center justify-center">
-      {/* User Icon Button */}
-      <button
-        aria-label="Account"
-        onClick={toggle}
-        className="bg-transparent border-none cursor-pointer p-1 flex items-center justify-center group"
-      >
-        <svg
-          viewBox="0 0 24 24"
-          className="w-[18px] h-[18px] fill-none stroke-neutral-400 stroke-2 [stroke-linecap:round] [stroke-linejoin:round] transition-colors group-hover:stroke-white"
-        >
-          <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-          <circle cx="12" cy="7" r="4" />
-        </svg>
-      </button>
+      {/* Trigger */}
+      {renderTrigger ? renderTrigger(toggle, open) : defaultTrigger}
 
       {/* Dropdown Panel */}
       {mounted && (

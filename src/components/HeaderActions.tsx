@@ -32,15 +32,33 @@ export default function HeaderActions() {
 
   return (
     <div className="flex items-center gap-5">
-      {/* "Sign In / Sign Up" text — only when NOT logged in */}
+      {/* Sign In (with dropdown) / Sign Up — only when NOT logged in */}
       {loaded && !user && (
-        <span className="text-sm text-neutral-400 whitespace-nowrap">
-          Sign In / Sign Up
-        </span>
+        <div className="flex items-center gap-0 whitespace-nowrap">
+          <UserDropdown
+            renderTrigger={(toggle) => (
+              <button
+                onClick={toggle}
+                className="bg-transparent border-none cursor-pointer text-sm text-neutral-400 hover:text-white transition-colors"
+              >
+                Sign In
+              </button>
+            )}
+          />
+          <span className="text-sm text-neutral-400 mx-1">/</span>
+          <button
+            onClick={() => {
+              /* Sign Up — no dropdown for now */
+            }}
+            className="bg-transparent border-none cursor-pointer text-sm text-neutral-400 hover:text-white transition-colors"
+          >
+            Sign Up
+          </button>
+        </div>
       )}
 
-      {/* User dropdown (always visible) */}
-      <UserDropdown />
+      {/* User dropdown (only when logged in — shows account info) */}
+      {loaded && user && <UserDropdown />}
 
       {/* Wishlist — only when logged in */}
       {loaded && user && (

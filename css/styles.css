@@ -1,0 +1,114 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background-color: #111;
+    min-height: 300vh;
+}
+
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    height: 50px;
+    background-color: #1c1c1c;
+    border-bottom: 2px solid #e04040;
+}
+
+.logo {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.logo a {
+    text-decoration: none;
+}
+
+.logo-damn {
+    color: #ffffff;
+}
+
+.logo-modz {
+    color: #e04040;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 35px;
+}
+
+nav a {
+    color: #cccccc;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+}
+
+nav a:hover {
+    color: #ffffff;
+}
+
+.header-icons {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.header-icons button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-icons svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: #cccccc;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: stroke 0.2s ease;
+}
+
+.header-icons button:hover svg {
+    stroke: #ffffff;
+}
+
+/* Page content placeholder */
+.page-content {
+    padding: 60px 40px;
+    color: #ffffff;
+}
+
+.page-content h1 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.page-content p {
+    font-size: 16px;
+    color: #999999;
+    line-height: 1.6;
+}

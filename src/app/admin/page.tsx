@@ -1,24 +1,25 @@
-import { redirect } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
-import { isOwner } from '@/lib/auth/owner';
-
-export default async function AdminPage() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  /* Re-check owner role server-side before rendering */
-  if (!user || !isOwner(user)) {
-    redirect('/');
-  }
-
+export default function AdminHomePage() {
   return (
-    <main className="min-h-[calc(100vh-60px)] flex items-center justify-center px-4">
-      <div className="text-center space-y-4">
-        <h1 className="text-3xl font-bold text-white">Admin Panel</h1>
-        <p className="text-neutral-400 text-sm">
-          Welcome, <span className="text-white font-medium">{user.email}</span>
-        </p>
-        <p className="text-neutral-500 text-xs">This page is under construction.</p>
+    <main className="p-8">
+      <h1 className="text-2xl font-bold text-white mb-2">Home</h1>
+      <p className="text-neutral-400 text-sm">
+        Welcome to the admin panel. Use the sidebar to navigate.
+      </p>
+
+      {/* ── Dashboard cards placeholder ─────────────── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+        <div className="bg-dark-card border border-dark-border rounded-xl p-5 space-y-1">
+          <p className="text-neutral-500 text-xs font-medium uppercase tracking-wide">Total Users</p>
+          <p className="text-2xl font-bold text-white">—</p>
+        </div>
+        <div className="bg-dark-card border border-dark-border rounded-xl p-5 space-y-1">
+          <p className="text-neutral-500 text-xs font-medium uppercase tracking-wide">Total Orders</p>
+          <p className="text-2xl font-bold text-white">—</p>
+        </div>
+        <div className="bg-dark-card border border-dark-border rounded-xl p-5 space-y-1">
+          <p className="text-neutral-500 text-xs font-medium uppercase tracking-wide">Revenue</p>
+          <p className="text-2xl font-bold text-white">—</p>
+        </div>
       </div>
     </main>
   );

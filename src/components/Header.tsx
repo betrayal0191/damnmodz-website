@@ -47,7 +47,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-dark-header border-b border-dark-border">
-      <div className="flex items-center h-[60px] px-8 max-w-[1600px] mx-auto">
+      <div className="flex items-center h-[60px] px-8">
         {/* ── Logo ──────────────────────────────────────── */}
         <Link href={logo.href} className="flex items-center gap-2 no-underline mr-8 flex-shrink-0">
           {/* Purple star/leaf icon */}

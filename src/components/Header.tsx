@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import content from '@/data/content.json';
-import UserDropdown from '@/components/UserDropdown';
+import HeaderActions from '@/components/HeaderActions';
 
 /* ── Social icon SVGs ─────────────────────────────────── */
 function InstagramIcon() {
@@ -116,38 +116,8 @@ export default function Header() {
           </div>
         </div>
 
-        {/* ── Right Icons (User, Wishlist, Cart) ────────── */}
-        <div className="flex items-center gap-5">
-          {/* User dropdown */}
-          <UserDropdown />
-
-          {/* Wishlist */}
-          <button aria-label="Wishlist" className="relative bg-transparent border-none cursor-pointer p-0 flex items-center justify-center group">
-            <svg viewBox="0 0 24 24" className="w-[20px] h-[20px] fill-none stroke-neutral-400 stroke-2 [stroke-linecap:round] [stroke-linejoin:round] transition-colors group-hover:stroke-white">
-              <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
-            </svg>
-            <span className="absolute -top-1.5 -right-2.5 bg-accent text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-              0
-            </span>
-          </button>
-
-          {/* Cart */}
-          <Link href="#" className="flex items-center gap-2 no-underline group">
-            <div className="relative">
-              <svg viewBox="0 0 24 24" className="w-[20px] h-[20px] fill-none stroke-neutral-400 stroke-2 [stroke-linecap:round] [stroke-linejoin:round] transition-colors group-hover:stroke-white">
-                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <path d="M16 10a4 4 0 01-8 0" />
-              </svg>
-              <span className="absolute -top-1.5 -right-2.5 bg-accent text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                0
-              </span>
-            </div>
-            <span className="text-sm text-neutral-400 transition-colors group-hover:text-white whitespace-nowrap">
-              / $0.00
-            </span>
-          </Link>
-        </div>
+        {/* ── Right Icons (Sign In text + User + Wishlist + Cart) ── */}
+        <HeaderActions />
       </div>
     </header>
   );

@@ -11,24 +11,32 @@ interface ActionResult {
 
 interface GetProductsResult {
   products: Product[];
+  total: number;
   error?: string;
 }
 
-/* ── Fetch all products (newest first) ──────────────────── */
-export async function getProducts(): Promise<GetProductsResult> {
+/* ── Fetch paginated products (newest first) ────────────── */
+export async function getProducts(
+  page: number = 1,
+  perPage: number = 20,
+): Promise<GetProductsResult> {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
+  const from = (page - 1) * perPage;
+  const to = from + perPage - 1;
+
+  const { data, error, count } = await supabase
     .from('products')
-    .select('*')
-    .order('created_at', { ascending: false });
+    .select('*', { count: 'exact' })
+    .order('created_at', { ascending: false })
+    .range(from, to);
 
   if (error) {
     console.error('[getProducts]', error);
-    return { products: [], error: error.message };
+    return { products: [], total: 0, error: error.message };
   }
 
-  return { products: (data ?? []) as Product[] };
+  return { products: (data ?? []) as Product[], total: count ?? 0 };
 }
 
 /* ── Create a new product ───────────────────────────────── */

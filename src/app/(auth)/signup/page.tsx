@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import AuthCard from '@/components/auth/AuthCard';
+import AuthCard from '../_components/AuthCard';
 
 export const metadata = {
   title: 'Sign Up — DamnModz',

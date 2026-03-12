@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, type FormEvent } from 'react';
 import { ITEM_TYPES, type ItemType, type Product, type CreateProductInput } from '@/types/product';
-import { createProduct, updateProduct } from '@/app/admin/products/actions';
+import { createProduct, updateProduct } from '../actions';
 import RichTextEditor from './RichTextEditor';
 import LanguageTagInput from './LanguageTagInput';
 import ImageUpload from './ImageUpload';

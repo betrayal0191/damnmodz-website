@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
-import AddProductModal from '@/components/admin/AddProductModal';
-import ProductDetailModal from '@/components/admin/ProductDetailModal';
+import AddProductModal from './_components/AddProductModal';
+import ProductDetailModal from './_components/ProductDetailModal';
 import { getProducts, deleteProduct } from './actions';
 import type { Product } from '@/types/product';
 

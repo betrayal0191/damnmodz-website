@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { isOwner } from '@/lib/auth/owner';
-import AdminSidebar from '@/components/admin/AdminSidebar';
+import AdminSidebar from './_components/AdminSidebar';
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();

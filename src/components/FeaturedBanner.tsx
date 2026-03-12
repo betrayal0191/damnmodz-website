@@ -1,8 +1,40 @@
 import Link from 'next/link';
+import { createClient } from '@/lib/supabase/server';
 import content from '@/data/content.json';
 
-export default function FeaturedBanner() {
-  const banners = content.featured_banners;
+interface Banner {
+  background_image: string;
+  background_alt: string;
+  logo_image: string;
+  logo_alt: string;
+  title: string;
+  platforms: string[];
+  platforms_label: string;
+  description: string;
+  cta_text: string;
+  cta_href: string;
+  price_label: string;
+  price_value: string;
+}
+
+export default async function FeaturedBanner() {
+  let banners: Banner[] = content.featured_banners;
+
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from('site_content')
+      .select('value')
+      .eq('key', 'featured_banners')
+      .single();
+
+    if (data?.value && Array.isArray(data.value) && data.value.length > 0) {
+      banners = data.value as Banner[];
+    }
+  } catch {
+    // Fall back to static content.json
+  }
+
   const b = banners[0]; // First banner (carousel-ready)
 
   return (

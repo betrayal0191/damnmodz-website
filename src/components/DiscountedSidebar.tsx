@@ -1,8 +1,37 @@
 import GameCard from './GameCard';
+import { createClient } from '@/lib/supabase/server';
 import content from '@/data/content.json';
 
-export default function DiscountedSidebar() {
-  const { section_title, games } = content.discounted_games;
+interface DiscountedGamesData {
+  section_title: string;
+  games: {
+    thumbnail: string;
+    name: string;
+    rating: number;
+    price: string;
+    href: string;
+  }[];
+}
+
+export default async function DiscountedSidebar() {
+  let data: DiscountedGamesData = content.discounted_games;
+
+  try {
+    const supabase = await createClient();
+    const { data: row } = await supabase
+      .from('site_content')
+      .select('value')
+      .eq('key', 'discounted_games')
+      .single();
+
+    if (row?.value && typeof row.value === 'object' && 'games' in (row.value as object)) {
+      data = row.value as DiscountedGamesData;
+    }
+  } catch {
+    // Fall back to static content.json
+  }
+
+  const { section_title, games } = data;
 
   return (
     <aside className="w-[280px] min-w-[280px] bg-dark-card rounded-xl p-5 flex flex-col">

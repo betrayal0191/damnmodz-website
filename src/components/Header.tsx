@@ -51,29 +51,29 @@ export default async function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-dark-header border-b border-dark-border">
-      <div className="flex items-center h-[60px] px-8">
+      <div className="flex items-center h-[72px] px-10">
         {/* ── Logo ──────────────────────────────────────── */}
-        <Link href={logo.href} className="flex items-center gap-2 no-underline mr-8 flex-shrink-0">
+        <Link href={logo.href} className="flex items-center gap-2.5 no-underline mr-10 flex-shrink-0">
           {/* Purple star/leaf icon */}
-          <svg viewBox="0 0 24 24" className="w-6 h-6 text-accent fill-current">
+          <svg viewBox="0 0 24 24" className="w-7 h-7 text-accent fill-current">
             <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8l-6.2 4.5 2.4-7.4L2 9.4h7.6z" />
           </svg>
-          <span className="text-lg font-bold text-white tracking-tight">
+          <span className="text-xl font-bold text-white tracking-tight">
             {logo.text_left}<span className="text-accent">{logo.text_right}</span>
           </span>
         </Link>
 
         {/* ── Navigation ────────────────────────────────── */}
-        <nav className="flex items-center gap-6 mr-auto">
+        <nav className="flex items-center gap-7 mr-auto">
           {nav.map((item: { label: string; href: string; hasDropdown?: boolean }) => (
             <Link
               key={item.href}
               href={item.href}
-              className="text-neutral-300 no-underline text-sm font-medium whitespace-nowrap transition-colors hover:text-white flex items-center gap-1"
+              className="text-neutral-300 no-underline text-[15px] font-medium whitespace-nowrap transition-colors hover:text-white flex items-center gap-1"
             >
               {item.label}
               {item.hasDropdown && (
-                <svg viewBox="0 0 20 20" className="w-3.5 h-3.5 fill-current opacity-60">
+                <svg viewBox="0 0 20 20" className="w-4 h-4 fill-current opacity-60">
                   <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
                 </svg>
               )}
@@ -82,7 +82,7 @@ export default async function Header() {
         </nav>
 
         {/* ── Social Icons ──────────────────────────────── */}
-        <div className="flex items-center gap-2.5 mr-6">
+        <div className="flex items-center gap-3 mr-7">
           {social.map((s: { label: string; href: string; icon: string }) => {
             const Icon = socialIcons[s.icon];
             return (
@@ -92,7 +92,7 @@ export default async function Header() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={s.label}
-                className="w-8 h-8 rounded-full border border-zinc-600 flex items-center justify-center text-neutral-400 transition-colors hover:text-white hover:border-zinc-400"
+                className="w-9 h-9 rounded-full border border-zinc-600 flex items-center justify-center text-neutral-400 transition-colors hover:text-white hover:border-zinc-400"
               >
                 {Icon && <Icon />}
               </a>
@@ -101,18 +101,18 @@ export default async function Header() {
         </div>
 
         {/* ── Search Bar ────────────────────────────────── */}
-        <div className="flex items-center mr-6">
+        <div className="flex items-center mr-7">
           <div className="relative flex items-center">
             <input
               type="text"
               placeholder="Search for products"
-              className="w-52 h-9 pl-4 pr-10 bg-transparent border border-zinc-600 rounded-full text-sm text-neutral-300 placeholder-neutral-500 focus:outline-none focus:border-accent transition-colors"
+              className="w-56 h-10 pl-4 pr-11 bg-transparent border border-zinc-600 rounded-full text-sm text-neutral-300 placeholder-neutral-500 focus:outline-none focus:border-accent transition-colors"
             />
             <button
               aria-label="Search"
-              className="absolute right-0 top-0 h-9 w-9 rounded-full bg-accent flex items-center justify-center transition-colors hover:bg-accent-hover"
+              className="absolute right-0 top-0 h-10 w-10 rounded-full bg-accent flex items-center justify-center transition-colors hover:bg-accent-hover"
             >
-              <svg viewBox="0 0 24 24" className="w-4 h-4 fill-none stroke-white stroke-2 [stroke-linecap:round] [stroke-linejoin:round]">
+              <svg viewBox="0 0 24 24" className="w-[18px] h-[18px] fill-none stroke-white stroke-2 [stroke-linecap:round] [stroke-linejoin:round]">
                 <circle cx="11" cy="11" r="8" />
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>

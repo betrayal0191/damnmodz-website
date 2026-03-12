@@ -7,8 +7,7 @@
         },
         "nav": [
             { "label": "Home", "href": "/" },
-            { "label": "Games", "href": "/browse-games", "hasDropdown": true },
-            { "label": "Sale", "href": "/sale" }
+            { "label": "Games", "href": "/browse-games", "hasDropdown": true }
         ],
         "social": [
             { "label": "Instagram", "href": "https://instagram.com", "icon": "instagram" },

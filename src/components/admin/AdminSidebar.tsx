@@ -37,7 +37,7 @@ export default function AdminSidebar({ email }: { email: string }) {
   const pathname = usePathname();
 
   return (
-    <aside className="w-60 flex-shrink-0 bg-dark-header border-r border-dark-border min-h-[calc(100vh-60px)] flex flex-col">
+    <aside className="w-60 flex-shrink-0 bg-dark-header border-r border-dark-border min-h-[calc(100vh-72px)] flex flex-col">
       {/* ── Header ──────────────────────────────────── */}
       <div className="px-5 py-5 border-b border-dark-border">
         <h2 className="text-sm font-bold text-white tracking-wide uppercase flex items-center gap-2">

@@ -6,7 +6,7 @@
             "href": "/"
         },
         "nav": [
-            { "label": "In-Game Items" },
+            { "label": "In-Game Items", "icon": "ingame" },
             { "label": "Game Coins" },
             { "label": "Top-Ups" },
             { "label": "Accounts", "icon": "accounts" }

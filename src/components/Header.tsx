@@ -39,7 +39,7 @@ function DiscordIcon() {
 
 function InGameIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none">
+    <svg viewBox="0 0 24 24" className="w-6 h-6 flex-shrink-0" fill="none">
       <path d="M8 5L8.758 7.27391C8.90253 7.70751 9.3083 7.99999 9.76536 8H14.2346C14.6917 7.99999 15.0975 7.70751 15.242 7.27391L16 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       <path fillRule="evenodd" clipRule="evenodd" d="M7.39077 5H16.6093C18.5513 5 20.2128 6.39495 20.5489 8.3077L21.966 16.3718C22.1583 17.4661 21.5195 18.536 20.465 18.8859V18.8859C19.6174 19.1672 18.6836 18.9181 18.0886 18.2521L15.1959 15.014H8.8041L5.91141 18.2521C5.31642 18.9181 4.38269 19.1672 3.53504 18.8859V18.8859C2.48052 18.536 1.84175 17.4661 2.03404 16.3718L3.45113 8.3077C3.78725 6.39495 5.44872 5 7.39077 5Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
@@ -48,7 +48,7 @@ function InGameIcon() {
 
 function AccountsIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none">
+    <svg viewBox="0 0 24 24" className="w-6 h-6 flex-shrink-0" fill="none">
       <path d="M21 11V8C21 5.23858 18.7614 3 16 3H8C5.23858 3 3 5.23858 3 8V16C3 18.7614 5.23858 21 8 21H12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M12 14H10C8.89543 14 8 14.8954 8 16V16" stroke="currentColor" strokeWidth="1.4824" strokeLinecap="round" strokeLinejoin="round" />
       <circle cx="12" cy="9.25" r="2.25" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />

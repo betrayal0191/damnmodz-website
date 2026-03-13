@@ -65,19 +65,13 @@ export default async function Header() {
 
         {/* ── Navigation ────────────────────────────────── */}
         <nav className="flex items-center gap-7 mr-auto">
-          {nav.map((item: { label: string; href: string; hasDropdown?: boolean }) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-neutral-300 no-underline text-[15px] font-medium whitespace-nowrap transition-colors hover:text-white flex items-center gap-1"
+          {nav.map((item: { label: string }) => (
+            <span
+              key={item.label}
+              className="text-neutral-300 text-[15px] font-medium whitespace-nowrap transition-colors hover:text-white cursor-pointer select-none"
             >
               {item.label}
-              {item.hasDropdown && (
-                <svg viewBox="0 0 20 20" className="w-4 h-4 fill-current opacity-60">
-                  <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
-                </svg>
-              )}
-            </Link>
+            </span>
           ))}
         </nav>
 

@@ -6,8 +6,10 @@
             "href": "/"
         },
         "nav": [
-            { "label": "Home", "href": "/" },
-            { "label": "Games", "href": "/browse-games", "hasDropdown": true }
+            { "label": "In-Game Items" },
+            { "label": "Game Coins" },
+            { "label": "Keys & Top-Ups" },
+            { "label": "Accounts" }
         ],
         "social": [
             { "label": "Instagram", "href": "https://instagram.com", "icon": "instagram" },

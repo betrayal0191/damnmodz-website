@@ -48,7 +48,7 @@ function InGameIcon() {
 
 function GameCoinsIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="w-6 h-6 flex-shrink-0" fill="none">
+    <svg viewBox="0 0 24 24" className="w-[22px] h-[22px] flex-shrink-0" fill="none">
       <circle cx="12" cy="12" r="10.25" stroke="currentColor" strokeWidth="1.5" />
       <path d="M12 6V18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
       <path d="M15 9C15 7.34 13.66 6.5 12 6.5C10.34 6.5 9 7.84 9 9C9 10.66 10.34 11.5 12 12C13.66 12.5 15 13.34 15 15C15 16.66 13.66 17.5 12 17.5C10.34 17.5 9 16.16 9 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />

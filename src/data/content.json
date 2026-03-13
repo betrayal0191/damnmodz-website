@@ -8,7 +8,7 @@
         "nav": [
             { "label": "In-Game Items", "icon": "ingame" },
             { "label": "Game Coins" },
-            { "label": "Top-Ups" },
+            { "label": "Top-Ups", "icon": "topups" },
             { "label": "Accounts", "icon": "accounts" }
         ],
         "social": [

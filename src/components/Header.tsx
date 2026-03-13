@@ -39,9 +39,21 @@ function DiscordIcon() {
 
 function InGameIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="w-6 h-6 flex-shrink-0" fill="none">
+    <svg viewBox="0 0 24 24" className="w-6 h-6 flex-shrink-0 translate-y-[0.5px]" fill="none">
       <path d="M8 5L8.758 7.27391C8.90253 7.70751 9.3083 7.99999 9.76536 8H14.2346C14.6917 7.99999 15.0975 7.70751 15.242 7.27391L16 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       <path fillRule="evenodd" clipRule="evenodd" d="M7.39077 5H16.6093C18.5513 5 20.2128 6.39495 20.5489 8.3077L21.966 16.3718C22.1583 17.4661 21.5195 18.536 20.465 18.8859V18.8859C19.6174 19.1672 18.6836 18.9181 18.0886 18.2521L15.1959 15.014H8.8041L5.91141 18.2521C5.31642 18.9181 4.38269 19.1672 3.53504 18.8859V18.8859C2.48052 18.536 1.84175 17.4661 2.03404 16.3718L3.45113 8.3077C3.78725 6.39495 5.44872 5 7.39077 5Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function TopUpsIcon() {
+  return (
+    <svg viewBox="0 0 26 26" className="w-6 h-6 flex-shrink-0" fill="none">
+      <path d="M22.0037 10.4989V7.49768C22.0037 6.1164 20.884 4.99664 19.5027 4.99664H6.49726C5.11597 4.99664 3.99622 6.1164 3.99622 7.49768V10.9991" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M22.0037 15.501V18.5023C22.0037 19.8836 20.884 21.0033 19.5027 21.0033H16.0012" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path fillRule="evenodd" clipRule="evenodd" d="M19.5028 10.499H22.0038C22.5563 10.499 23.0042 10.9469 23.0042 11.4994V14.5006C23.0042 15.0531 22.5563 15.501 22.0038 15.501H19.5028C18.1215 15.501 17.0017 14.3813 17.0017 13V13C17.0017 11.6187 18.1215 10.499 19.5028 10.499V10.4992" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M13 17.0017H2.99585" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path fillRule="evenodd" clipRule="evenodd" d="M10.9992 14.0004H4.99668C3.89165 14.0004 2.99585 14.8962 2.99585 16.0013V20.0029C2.99585 21.108 3.89165 22.0038 4.99668 22.0038H10.9992C12.1042 22.0038 13 21.108 13 20.0029V16.0013C13 14.8962 12.1042 14.0004 10.9992 14.0004Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -59,6 +71,7 @@ function AccountsIcon() {
 
 const navIcons: Record<string, () => JSX.Element> = {
   ingame: InGameIcon,
+  topups: TopUpsIcon,
   accounts: AccountsIcon,
 };
 

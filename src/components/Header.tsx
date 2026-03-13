@@ -39,7 +39,7 @@ function DiscordIcon() {
 
 function AccountsIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="w-[18px] h-[18px]" fill="none">
+    <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none">
       <path d="M21 11V8C21 5.23858 18.7614 3 16 3H8C5.23858 3 3 5.23858 3 8V16C3 18.7614 5.23858 21 8 21H12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M12 14H10C8.89543 14 8 14.8954 8 16V16" stroke="currentColor" strokeWidth="1.4824" strokeLinecap="round" strokeLinejoin="round" />
       <circle cx="12" cy="9.25" r="2.25" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />

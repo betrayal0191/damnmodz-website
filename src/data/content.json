@@ -9,7 +9,7 @@
             { "label": "In-Game Items" },
             { "label": "Game Coins" },
             { "label": "Top-Ups" },
-            { "label": "Accounts" }
+            { "label": "Accounts", "icon": "accounts" }
         ],
         "social": [
             { "label": "Instagram", "href": "https://instagram.com", "icon": "instagram" },

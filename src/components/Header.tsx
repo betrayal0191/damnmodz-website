@@ -37,6 +37,21 @@ function DiscordIcon() {
   );
 }
 
+function AccountsIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="w-[18px] h-[18px]" fill="none">
+      <path d="M21 11V8C21 5.23858 18.7614 3 16 3H8C5.23858 3 3 5.23858 3 8V16C3 18.7614 5.23858 21 8 21H12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M12 14H10C8.89543 14 8 14.8954 8 16V16" stroke="currentColor" strokeWidth="1.4824" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="12" cy="9.25" r="2.25" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path fillRule="evenodd" clipRule="evenodd" d="M15 17.9948C15 19.6783 17.1183 20.9244 18.0607 21.3957C18.3373 21.5349 18.6635 21.5348 18.94 21.3953C19.8827 20.9238 22 19.6805 22 17.9948V15.5978C21.9919 15.3363 21.7878 15.1258 21.5268 15.1034C20.6406 15.0221 19.7923 14.7049 19.0702 14.1847C18.7614 13.9384 18.27 13.9384 17.9384 14.1847C17.2076 14.7049 16.3594 15.0221 15.4732 15.1034C15.2122 15.1229 15.0081 15.3363 15 15.5978V17.9948Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+const navIcons: Record<string, () => JSX.Element> = {
+  accounts: AccountsIcon,
+};
+
 const socialIcons: Record<string, () => JSX.Element> = {
   instagram: InstagramIcon,
   youtube: YouTubeIcon,
@@ -65,14 +80,18 @@ export default async function Header() {
 
         {/* ── Navigation ────────────────────────────────── */}
         <nav className="flex items-center gap-7 mr-auto">
-          {nav.map((item: { label: string }) => (
-            <span
-              key={item.label}
-              className="text-neutral-300 text-[15px] font-medium whitespace-nowrap transition-colors hover:text-white cursor-pointer select-none"
-            >
-              {item.label}
-            </span>
-          ))}
+          {nav.map((item: { label: string; icon?: string }) => {
+            const NavIcon = item.icon ? navIcons[item.icon] : null;
+            return (
+              <span
+                key={item.label}
+                className="text-neutral-300 text-[15px] font-medium whitespace-nowrap transition-colors hover:text-white cursor-pointer select-none flex items-center gap-1.5"
+              >
+                {NavIcon && <NavIcon />}
+                {item.label}
+              </span>
+            );
+          })}
         </nav>
 
         {/* ── Social Icons ──────────────────────────────── */}

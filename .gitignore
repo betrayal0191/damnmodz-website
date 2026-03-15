@@ -26,6 +26,9 @@ yarn-error.log*
 # local env files
 .env*.local
 
+# plans (may contain sensitive architecture notes)
+/plans/
+
 # vercel
 .vercel
 

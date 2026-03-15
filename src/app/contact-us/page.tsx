@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Contact Us — DamnModz',
+  title: 'Contact Us — OpusKeys',
 };
 
 export default function ContactUsPage() {

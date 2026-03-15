@@ -1,0 +1,91 @@
+{
+  "nav": {
+    "inGameItems": "Artículos del Juego",
+    "gameCoins": "Monedas de Juego",
+    "topUps": "Recargas",
+    "accounts": "Cuentas"
+  },
+  "header": {
+    "searchPlaceholder": "Buscar productos",
+    "signIn": "Iniciar Sesión",
+    "signUp": "Registrarse",
+    "owner": "Propietario",
+    "wishlist": "Favoritos",
+    "cart": "Carrito"
+  },
+  "auth": {
+    "welcomeBack": "¡Bienvenido de nuevo!",
+    "createAccount": "Crear una cuenta",
+    "signInToAccount": "Inicia sesión en tu cuenta de OpusKeys",
+    "joinToday": "Únete a OpusKeys hoy",
+    "emailAddress": "Correo electrónico",
+    "emailPlaceholder": "tu@ejemplo.com",
+    "sendMagicLink": "Enviar enlace mágico",
+    "sendingLink": "Enviando enlace…",
+    "or": "o",
+    "continueWithGoogle": "Continuar con Google",
+    "signUpWithGoogle": "Registrarse con Google",
+    "noAccount": "¿No tienes cuenta?",
+    "alreadyHaveAccount": "¿Ya tienes una cuenta?",
+    "checkYourEmail": "Revisa tu correo",
+    "magicLinkSentTo": "Enviamos un enlace mágico a",
+    "clickToSignIn": "Haz clic para iniciar sesión.",
+    "clickToCreate": "Haz clic para crear tu cuenta.",
+    "back": "← Volver",
+    "redirecting": "Redirigiendo…",
+    "sending": "Enviando...",
+    "createAccountBtn": "Crear Cuenta",
+    "sentConfirmation": "Enviamos un enlace de confirmación a",
+    "sentLogin": "Enviamos un enlace de inicio de sesión a",
+    "checkInboxSignUp": "Revisa tu bandeja de entrada y haz clic en el enlace para completar el registro.",
+    "checkInboxSignIn": "Revisa tu bandeja de entrada y haz clic en el enlace para iniciar sesión.",
+    "useDifferentEmail": "← Usar otro correo",
+    "signInLabel": "Iniciar Sesión",
+    "signUpLabel": "Registrarse",
+    "emailAddressLabel": "Correo electrónico:",
+    "adminPanel": "Panel de Admin",
+    "signOut": "Cerrar Sesión"
+  },
+  "pages": {
+    "contactUs": {
+      "title": "Contáctanos",
+      "metaTitle": "Contáctanos — OpusKeys",
+      "description": "¿Tienes preguntas? Ponte en contacto con nuestro equipo de soporte."
+    },
+    "affiliateProgram": {
+      "title": "Programa de Afiliados",
+      "metaTitle": "Programa de Afiliados — OpusKeys",
+      "description": "Únete a nuestro programa de afiliados y gana comisiones en cada venta."
+    }
+  },
+  "languages": {
+    "en": "English",
+    "es": "Español",
+    "pl": "Polski"
+  },
+  "footer": {
+    "description": "La tienda online de equipamiento y electrónica es una de las principales tiendas online. La colección fue lanzada en 25 volúmenes.",
+    "legal": "Legal",
+    "termsOfService": "Términos de Servicio",
+    "privacyPolicy": "Política de Privacidad",
+    "refundPolicy": "Política de Reembolso",
+    "gamingPlatforms": "Plataformas de juego",
+    "pc": "PC",
+    "playstation5": "PlayStation 5",
+    "xboxSeriesXS": "Xbox Series X|S",
+    "nintendoSwitch": "Nintendo Switch",
+    "socialLinks": "Redes Sociales",
+    "instagram": "Instagram",
+    "twitter": "Twitter",
+    "youtube": "YouTube",
+    "other": "Otros",
+    "contactUs": "Contáctanos",
+    "faq": "FAQ",
+    "action": "Acción",
+    "adventure": "Aventura",
+    "casual": "Casual",
+    "horror": "Terror",
+    "indie": "Indie",
+    "racing": "Carreras"
+  }
+}

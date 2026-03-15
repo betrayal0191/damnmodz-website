@@ -1,7 +1,8 @@
 'use server';
 
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/lib/auth';
 import { isOwner } from '@/lib/auth/owner';
+import pool from '@/lib/db';
 import { ITEM_TYPES, type Product, type CreateProductInput } from '@/types/product';
 
 interface ActionResult {
@@ -20,32 +21,31 @@ export async function getProducts(
   page: number = 1,
   perPage: number = 20,
 ): Promise<GetProductsResult> {
-  const supabase = await createClient();
+  try {
+    const offset = (page - 1) * perPage;
 
-  const from = (page - 1) * perPage;
-  const to = from + perPage - 1;
+    const [dataResult, countResult] = await Promise.all([
+      pool.query(
+        'SELECT * FROM products ORDER BY created_at DESC LIMIT $1 OFFSET $2',
+        [perPage, offset]
+      ),
+      pool.query('SELECT COUNT(*) FROM products'),
+    ]);
 
-  const { data, error, count } = await supabase
-    .from('products')
-    .select('*', { count: 'exact' })
-    .order('created_at', { ascending: false })
-    .range(from, to);
-
-  if (error) {
+    return {
+      products: dataResult.rows as Product[],
+      total: parseInt(countResult.rows[0].count, 10),
+    };
+  } catch (error: any) {
     console.error('[getProducts]', error);
     return { products: [], total: 0, error: error.message };
   }
-
-  return { products: (data ?? []) as Product[], total: count ?? 0 };
 }
 
 /* ── Create a new product ───────────────────────────────── */
 export async function createProduct(input: CreateProductInput): Promise<ActionResult> {
-  /* ── Auth guard ──────────────────────────────────────── */
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user || !isOwner(user)) {
+  const session = await auth();
+  if (!session?.user || !isOwner(session.user)) {
     return { success: false, error: 'Unauthorized' };
   }
 
@@ -81,35 +81,35 @@ export async function createProduct(input: CreateProductInput): Promise<ActionRe
   }
 
   /* ── Insert ──────────────────────────────────────────── */
-  const { error } = await supabase.from('products').insert({
-    title: input.title.trim(),
-    price: input.price,
-    description: input.description,
-    category: input.category.trim(),
-    affiliate_fee: input.affiliate_fee,
-    item_type: input.item_type,
-    content: input.content.trim(),
-    additional_info: input.additional_info?.trim() || null,
-    activation_instructions: input.activation_instructions?.trim() || null,
-    languages: input.languages,
-    image_url: input.image_url || null,
-  });
-
-  if (error) {
+  try {
+    await pool.query(
+      `INSERT INTO products (title, price, description, category, affiliate_fee, item_type, content, additional_info, activation_instructions, languages, image_url)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+      [
+        input.title.trim(),
+        input.price,
+        input.description,
+        input.category.trim(),
+        input.affiliate_fee,
+        input.item_type,
+        input.content.trim(),
+        input.additional_info?.trim() || null,
+        input.activation_instructions?.trim() || null,
+        input.languages,
+        input.image_url || null,
+      ]
+    );
+    return { success: true };
+  } catch (error: any) {
     console.error('[createProduct]', error);
     return { success: false, error: error.message };
   }
-
-  return { success: true };
 }
 
 /* ── Update an existing product ─────────────────────────── */
 export async function updateProduct(id: string, input: CreateProductInput): Promise<ActionResult> {
-  /* ── Auth guard ──────────────────────────────────────── */
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user || !isOwner(user)) {
+  const session = await auth();
+  if (!session?.user || !isOwner(session.user)) {
     return { success: false, error: 'Unauthorized' };
   }
 
@@ -145,38 +145,36 @@ export async function updateProduct(id: string, input: CreateProductInput): Prom
   }
 
   /* ── Update ────────────────────────────────────────────── */
-  const { error } = await supabase
-    .from('products')
-    .update({
-      title: input.title.trim(),
-      price: input.price,
-      description: input.description,
-      category: input.category.trim(),
-      affiliate_fee: input.affiliate_fee,
-      item_type: input.item_type,
-      content: input.content.trim(),
-      additional_info: input.additional_info?.trim() || null,
-      activation_instructions: input.activation_instructions?.trim() || null,
-      languages: input.languages,
-      image_url: input.image_url || null,
-    })
-    .eq('id', id);
-
-  if (error) {
+  try {
+    await pool.query(
+      `UPDATE products SET title=$1, price=$2, description=$3, category=$4, affiliate_fee=$5, item_type=$6, content=$7, additional_info=$8, activation_instructions=$9, languages=$10, image_url=$11
+       WHERE id=$12`,
+      [
+        input.title.trim(),
+        input.price,
+        input.description,
+        input.category.trim(),
+        input.affiliate_fee,
+        input.item_type,
+        input.content.trim(),
+        input.additional_info?.trim() || null,
+        input.activation_instructions?.trim() || null,
+        input.languages,
+        input.image_url || null,
+        id,
+      ]
+    );
+    return { success: true };
+  } catch (error: any) {
     console.error('[updateProduct]', error);
     return { success: false, error: error.message };
   }
-
-  return { success: true };
 }
 
 /* ── Delete a product ───────────────────────────────────── */
 export async function deleteProduct(id: string): Promise<ActionResult> {
-  /* ── Auth guard ──────────────────────────────────────── */
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user || !isOwner(user)) {
+  const session = await auth();
+  if (!session?.user || !isOwner(session.user)) {
     return { success: false, error: 'Unauthorized' };
   }
 
@@ -185,15 +183,11 @@ export async function deleteProduct(id: string): Promise<ActionResult> {
   }
 
   /* ── Delete ──────────────────────────────────────────── */
-  const { error } = await supabase
-    .from('products')
-    .delete()
-    .eq('id', id);
-
-  if (error) {
+  try {
+    await pool.query('DELETE FROM products WHERE id = $1', [id]);
+    return { success: true };
+  } catch (error: any) {
     console.error('[deleteProduct]', error);
     return { success: false, error: error.message };
   }
-
-  return { success: true };
 }

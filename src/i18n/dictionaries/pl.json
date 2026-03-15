@@ -1,0 +1,91 @@
+{
+  "nav": {
+    "inGameItems": "Przedmioty w Grze",
+    "gameCoins": "Monety Gry",
+    "topUps": "Doładowania",
+    "accounts": "Konta"
+  },
+  "header": {
+    "searchPlaceholder": "Szukaj produktów",
+    "signIn": "Zaloguj się",
+    "signUp": "Zarejestruj się",
+    "owner": "Właściciel",
+    "wishlist": "Lista życzeń",
+    "cart": "Koszyk"
+  },
+  "auth": {
+    "welcomeBack": "Witaj ponownie!",
+    "createAccount": "Utwórz konto",
+    "signInToAccount": "Zaloguj się do swojego konta OpusKeys",
+    "joinToday": "Dołącz do OpusKeys już dziś",
+    "emailAddress": "Adres e-mail",
+    "emailPlaceholder": "ty@przyklad.com",
+    "sendMagicLink": "Wyślij link magiczny",
+    "sendingLink": "Wysyłanie linku…",
+    "or": "lub",
+    "continueWithGoogle": "Kontynuuj z Google",
+    "signUpWithGoogle": "Zarejestruj się przez Google",
+    "noAccount": "Nie masz konta?",
+    "alreadyHaveAccount": "Masz już konto?",
+    "checkYourEmail": "Sprawdź swoją pocztę",
+    "magicLinkSentTo": "Wysłaliśmy link magiczny na",
+    "clickToSignIn": "Kliknij, aby się zalogować.",
+    "clickToCreate": "Kliknij, aby utworzyć konto.",
+    "back": "← Wstecz",
+    "redirecting": "Przekierowywanie…",
+    "sending": "Wysyłanie...",
+    "createAccountBtn": "Utwórz Konto",
+    "sentConfirmation": "Wysłaliśmy link potwierdzający na",
+    "sentLogin": "Wysłaliśmy link do logowania na",
+    "checkInboxSignUp": "Sprawdź swoją skrzynkę i kliknij link, aby dokończyć rejestrację.",
+    "checkInboxSignIn": "Sprawdź swoją skrzynkę i kliknij link, aby się zalogować.",
+    "useDifferentEmail": "← Użyj innego adresu e-mail",
+    "signInLabel": "Zaloguj się",
+    "signUpLabel": "Zarejestruj się",
+    "emailAddressLabel": "Adres e-mail:",
+    "adminPanel": "Panel Admina",
+    "signOut": "Wyloguj się"
+  },
+  "pages": {
+    "contactUs": {
+      "title": "Kontakt",
+      "metaTitle": "Kontakt — OpusKeys",
+      "description": "Masz pytania? Skontaktuj się z naszym zespołem wsparcia."
+    },
+    "affiliateProgram": {
+      "title": "Program Partnerski",
+      "metaTitle": "Program Partnerski — OpusKeys",
+      "description": "Dołącz do naszego programu partnerskiego i zarabiaj prowizje od każdej sprzedaży."
+    }
+  },
+  "languages": {
+    "en": "English",
+    "es": "Español",
+    "pl": "Polski"
+  },
+  "footer": {
+    "description": "Sklep internetowy ze sprzętem i elektroniką jest jednym z wiodących sklepów internetowych. Kolekcja została wydana w 25 tomach.",
+    "legal": "Prawne",
+    "termsOfService": "Regulamin",
+    "privacyPolicy": "Polityka Prywatności",
+    "refundPolicy": "Polityka Zwrotów",
+    "gamingPlatforms": "Platformy gier",
+    "pc": "PC",
+    "playstation5": "PlayStation 5",
+    "xboxSeriesXS": "Xbox Series X|S",
+    "nintendoSwitch": "Nintendo Switch",
+    "socialLinks": "Media Społecznościowe",
+    "instagram": "Instagram",
+    "twitter": "Twitter",
+    "youtube": "YouTube",
+    "other": "Inne",
+    "contactUs": "Kontakt",
+    "faq": "FAQ",
+    "action": "Akcja",
+    "adventure": "Przygodowe",
+    "casual": "Casualowe",
+    "horror": "Horror",
+    "indie": "Indie",
+    "racing": "Wyścigowe"
+  }
+}

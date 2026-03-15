@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import AuthCard from '../_components/AuthCard';
 
 export const metadata = {
-  title: 'Login — DamnModz',
+  title: 'Login — OpusKeys',
 };
 
 export default function LoginPage() {

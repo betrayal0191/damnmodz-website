@@ -1,4 +1,3 @@
-import { Suspense } from 'react';
 import AuthCard from '../_components/AuthCard';
 
 export const metadata = {
@@ -6,9 +5,5 @@ export const metadata = {
 };
 
 export default function SignUpPage() {
-  return (
-    <Suspense>
-      <AuthCard initialMode="signup" />
-    </Suspense>
-  );
+  return <AuthCard initialMode="signup" />;
 }

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { createClient } from '@/lib/supabase/client';
 
 interface ImageUploadProps {
   value: string | null;
@@ -9,81 +8,30 @@ interface ImageUploadProps {
 }
 
 export default function ImageUpload({ value, onChange }: ImageUploadProps) {
-  const supabase = createClient();
-  const fileRef = useRef<HTMLInputElement>(null);
-  const [uploading, setUploading] = useState(false);
+  const [urlInput, setUrlInput] = useState(value ?? '');
   const [error, setError] = useState('');
 
-  const handleFile = async (file: File) => {
-    if (!file.type.startsWith('image/')) {
-      setError('Please select an image file.');
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      setError('Image must be under 5 MB.');
-      return;
-    }
-
+  const handleSetUrl = () => {
     setError('');
-    setUploading(true);
-
-    try {
-      const ext = file.name.split('.').pop() ?? 'png';
-      const path = `${crypto.randomUUID()}.${ext}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('product-images')
-        .upload(path, file, { cacheControl: '3600', upsert: false });
-
-      if (uploadError) throw uploadError;
-
-      const { data } = supabase.storage.from('product-images').getPublicUrl(path);
-      onChange(data.publicUrl);
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Upload failed';
-      setError(msg);
-    } finally {
-      setUploading(false);
+    if (!urlInput.trim()) {
+      onChange(null);
+      return;
     }
-  };
-
-  const handleRemove = async () => {
-    if (!value) return;
-
-    /* Extract the file path from the public URL */
     try {
-      const url = new URL(value);
-      const parts = url.pathname.split('/product-images/');
-      if (parts[1]) {
-        await supabase.storage.from('product-images').remove([parts[1]]);
-      }
+      new URL(urlInput.trim());
+      onChange(urlInput.trim());
     } catch {
-      /* ignore removal errors — just clear the URL */
+      setError('Please enter a valid URL.');
     }
-
-    onChange(null);
-    if (fileRef.current) fileRef.current.value = '';
   };
 
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    if (file) handleFile(file);
+  const handleRemove = () => {
+    onChange(null);
+    setUrlInput('');
   };
 
   return (
     <div>
-      <input
-        ref={fileRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={(e) => {
-          const file = e.target.files?.[0];
-          if (file) handleFile(file);
-        }}
-      />
-
       {value ? (
         /* ── Preview ──────────────────────────────────── */
         <div className="relative group w-full max-w-[200px]">
@@ -105,31 +53,29 @@ export default function ImageUpload({ value, onChange }: ImageUploadProps) {
           </button>
         </div>
       ) : (
-        /* ── Drop zone ────────────────────────────────── */
-        <div
-          onClick={() => fileRef.current?.click()}
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={handleDrop}
-          className="flex flex-col items-center justify-center gap-2 px-4 py-6 border-2 border-dashed border-dark-border rounded-lg cursor-pointer hover:border-accent/40 transition-colors"
-        >
-          {uploading ? (
-            <svg className="animate-spin h-6 w-6 text-accent" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-            </svg>
-          ) : (
-            <>
-              <svg viewBox="0 0 24 24" className="w-8 h-8 fill-none stroke-neutral-500 stroke-2 [stroke-linecap:round] [stroke-linejoin:round]">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                <circle cx="8.5" cy="8.5" r="1.5" />
-                <polyline points="21 15 16 10 5 21" />
-              </svg>
-              <p className="text-neutral-500 text-xs text-center">
-                Click or drag &amp; drop an image<br />
-                <span className="text-neutral-600">PNG, JPG, WebP — max 5 MB</span>
-              </p>
-            </>
-          )}
+        /* ── URL Input ────────────────────────────────── */
+        <div className="flex flex-col gap-2">
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={urlInput}
+              onChange={(e) => setUrlInput(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleSetUrl(); } }}
+              placeholder="Enter image URL…"
+              className="flex-1 px-3 py-2 bg-zinc-800 border border-dark-border rounded-lg text-white text-sm placeholder-neutral-500 focus:outline-none focus:border-accent/50 transition-colors"
+            />
+            <button
+              type="button"
+              onClick={handleSetUrl}
+              disabled={!urlInput.trim()}
+              className="px-3 py-2 bg-accent text-white text-sm rounded-lg hover:bg-accent-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              Set
+            </button>
+          </div>
+          <p className="text-neutral-500 text-xs">
+            Paste an external image URL (PNG, JPG, WebP)
+          </p>
         </div>
       )}
 

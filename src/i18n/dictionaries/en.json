@@ -1,0 +1,91 @@
+{
+  "nav": {
+    "inGameItems": "In-Game Items",
+    "gameCoins": "Game Coins",
+    "topUps": "Top-Ups",
+    "accounts": "Accounts"
+  },
+  "header": {
+    "searchPlaceholder": "Search for products",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "owner": "Owner",
+    "wishlist": "Wishlist",
+    "cart": "Cart"
+  },
+  "auth": {
+    "welcomeBack": "Welcome back!",
+    "createAccount": "Create an account",
+    "signInToAccount": "Sign in to your OpusKeys account",
+    "joinToday": "Join OpusKeys today",
+    "emailAddress": "Email address",
+    "emailPlaceholder": "you@example.com",
+    "sendMagicLink": "Send magic link",
+    "sendingLink": "Sending link…",
+    "or": "or",
+    "continueWithGoogle": "Continue with Google",
+    "signUpWithGoogle": "Sign up with Google",
+    "noAccount": "Don't have an account?",
+    "alreadyHaveAccount": "Already have an account?",
+    "checkYourEmail": "Check your email",
+    "magicLinkSentTo": "We sent a magic link to",
+    "clickToSignIn": "Click it to sign in.",
+    "clickToCreate": "Click it to create your account.",
+    "back": "← Back",
+    "redirecting": "Redirecting…",
+    "sending": "Sending...",
+    "createAccountBtn": "Create Account",
+    "sentConfirmation": "We sent a confirmation link to",
+    "sentLogin": "We sent a login link to",
+    "checkInboxSignUp": "Check your inbox and click the link to complete sign up.",
+    "checkInboxSignIn": "Check your inbox and click the link to sign in.",
+    "useDifferentEmail": "← Use a different email",
+    "signInLabel": "Sign In",
+    "signUpLabel": "Sign Up",
+    "emailAddressLabel": "Email Address:",
+    "adminPanel": "Admin Panel",
+    "signOut": "Sign Out"
+  },
+  "pages": {
+    "contactUs": {
+      "title": "Contact Us",
+      "metaTitle": "Contact Us — OpusKeys",
+      "description": "Have questions? Get in touch with our support team."
+    },
+    "affiliateProgram": {
+      "title": "Affiliate Program",
+      "metaTitle": "Affiliate Program — OpusKeys",
+      "description": "Join our affiliate program and earn commissions on every sale."
+    }
+  },
+  "languages": {
+    "en": "English",
+    "es": "Español",
+    "pl": "Polski"
+  },
+  "footer": {
+    "description": "The online store of equipment and electronics is one of the leading online stores. The band was released in 25 volumes.",
+    "legal": "Legal",
+    "termsOfService": "Terms of Service",
+    "privacyPolicy": "Privacy Policy",
+    "refundPolicy": "Refund Policy",
+    "gamingPlatforms": "Gaming platforms",
+    "pc": "PC",
+    "playstation5": "PlayStation 5",
+    "xboxSeriesXS": "Xbox Series X|S",
+    "nintendoSwitch": "Nintendo Switch",
+    "socialLinks": "Social Links",
+    "instagram": "Instagram",
+    "twitter": "Twitter",
+    "youtube": "YouTube",
+    "other": "Other",
+    "contactUs": "Contact us",
+    "faq": "FAQ",
+    "action": "Action",
+    "adventure": "Adventure",
+    "casual": "Casual",
+    "horror": "Horror",
+    "indie": "Indie",
+    "racing": "Racing"
+  }
+}

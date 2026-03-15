@@ -2,44 +2,25 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/client';
-import type { User } from '@supabase/supabase-js';
+import { useSession } from 'next-auth/react';
 import UserDropdown from '@/components/UserDropdown';
 import { isOwner } from '@/lib/auth/owner';
+import { useTranslation } from '@/i18n/TranslationProvider';
+import type { Locale } from '@/i18n/config';
 
 interface HeaderActionsProps {
   initialEmail: string | null;
   initialIsOwner: boolean;
+  locale: Locale;
 }
 
-export default function HeaderActions({ initialEmail, initialIsOwner }: HeaderActionsProps) {
-  const supabase = createClient();
-  const [user, setUser] = useState<User | null>(
-    initialEmail ? ({ email: initialEmail } as User) : null
-  );
-  const [loaded, setLoaded] = useState(!!initialEmail);
-  const [owner, setOwner] = useState(initialIsOwner);
+export default function HeaderActions({ initialEmail, initialIsOwner, locale }: HeaderActionsProps) {
+  const { data: session, status } = useSession();
+  const { dict } = useTranslation();
 
-  useEffect(() => {
-    const getUser = async () => {
-      const {
-        data: { user: currentUser },
-      } = await supabase.auth.getUser();
-      setUser(currentUser);
-      setOwner(isOwner(currentUser));
-      setLoaded(true);
-    };
-    getUser();
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-      setOwner(isOwner(session?.user ?? null));
-    });
-
-    return () => subscription.unsubscribe();
-  }, [supabase]);
+  const user = session?.user ?? (initialEmail ? { email: initialEmail } : null);
+  const loaded = status !== 'loading';
+  const owner = session?.user ? isOwner(session.user) : initialIsOwner;
 
   return (
     <div className="flex items-center gap-5">
@@ -53,7 +34,7 @@ export default function HeaderActions({ initialEmail, initialIsOwner }: HeaderAc
                 onClick={toggle}
                 className="bg-transparent border-none cursor-pointer text-sm text-neutral-400 hover:text-white transition-colors"
               >
-                Sign In
+                {dict.header.signIn}
               </button>
             )}
           />
@@ -65,7 +46,7 @@ export default function HeaderActions({ initialEmail, initialIsOwner }: HeaderAc
                 onClick={toggle}
                 className="bg-transparent border-none cursor-pointer text-sm text-neutral-400 hover:text-white transition-colors"
               >
-                Sign Up
+                {dict.header.signUp}
               </button>
             )}
           />
@@ -83,7 +64,7 @@ export default function HeaderActions({ initialEmail, initialIsOwner }: HeaderAc
             >
               {owner && (
                 <span className="text-xs font-semibold text-accent bg-accent/15 px-2 py-0.5 rounded-full">
-                  Owner
+                  {dict.header.owner}
                 </span>
               )}
               <span className="text-sm text-neutral-400 truncate max-w-[180px] transition-colors group-hover:text-white">
@@ -104,7 +85,7 @@ export default function HeaderActions({ initialEmail, initialIsOwner }: HeaderAc
       {/* Wishlist — only when logged in */}
       {loaded && user && (
         <button
-          aria-label="Wishlist"
+          aria-label={dict.header.wishlist}
           className="relative bg-transparent border-none cursor-pointer p-0 flex items-center justify-center group"
         >
           <svg

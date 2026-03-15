@@ -2,8 +2,8 @@
 
 import { useState, useRef, useEffect, useCallback, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
-import type { User } from '@supabase/supabase-js';
+import { signIn, signOut, useSession } from 'next-auth/react';
+import { useTranslation } from '@/i18n/TranslationProvider';
 
 type Step = 'form' | 'sent';
 
@@ -18,15 +18,17 @@ interface UserDropdownProps {
 
 export default function UserDropdown({ renderTrigger, mode = 'signin', isOwner = false }: UserDropdownProps) {
   const router = useRouter();
-  const supabase = createClient();
+  const { data: session, status } = useSession();
+  const { dict, locale } = useTranslation();
 
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
-  const [loadingUser, setLoadingUser] = useState(true);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const user = session?.user ?? null;
+  const loadingUser = status === 'loading';
 
   /* ── Form state ─────────────────────────────────────── */
   const [step, setStep] = useState<Step>('form');
@@ -35,26 +37,6 @@ export default function UserDropdown({ renderTrigger, mode = 'signin', isOwner =
   const [error, setError] = useState('');
   const [googleLoading, setGoogleLoading] = useState(false);
   const [googleError, setGoogleError] = useState('');
-
-  /* ── Fetch current user on mount ────────────────────── */
-  useEffect(() => {
-    const getUser = async () => {
-      const {
-        data: { user: currentUser },
-      } = await supabase.auth.getUser();
-      setUser(currentUser);
-      setLoadingUser(false);
-    };
-    getUser();
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, [supabase]);
 
   /* ── Close on click outside ─────────────────────────── */
   useEffect(() => {
@@ -118,22 +100,25 @@ export default function UserDropdown({ renderTrigger, mode = 'signin', isOwner =
     setError('');
     setLoading(true);
 
-    const { error: otpError } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        shouldCreateUser: true,
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
+    try {
+      const result = await signIn('nodemailer', {
+        email,
+        redirect: false,
+        callbackUrl: '/',
+      });
 
-    setLoading(false);
+      setLoading(false);
 
-    if (otpError) {
-      setError(otpError.message);
-      return;
+      if (result?.error) {
+        setError(result.error);
+        return;
+      }
+
+      setStep('sent');
+    } catch (err: any) {
+      setLoading(false);
+      setError(err.message || 'An error occurred');
     }
-
-    setStep('sent');
   };
 
   /* ── Google OAuth ───────────────────────────────────── */
@@ -141,25 +126,18 @@ export default function UserDropdown({ renderTrigger, mode = 'signin', isOwner =
     setGoogleError('');
     setGoogleLoading(true);
 
-    const { error: oauthError } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
-
-    if (oauthError) {
-      setGoogleError(oauthError.message);
+    try {
+      await signIn('google', { callbackUrl: '/' });
+    } catch (err: any) {
+      setGoogleError(err.message || 'An error occurred');
       setGoogleLoading(false);
     }
   };
 
   /* ── Sign Out ───────────────────────────────────────── */
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    setUser(null);
+    await signOut({ callbackUrl: '/' });
     setOpen(false);
-    window.location.reload();
   };
 
   /* ── Toggle ─────────────────────────────────────────── */
@@ -231,21 +209,21 @@ export default function UserDropdown({ renderTrigger, mode = 'signin', isOwner =
                       }}
                       className="w-full py-2.5 bg-accent text-white text-sm font-semibold rounded-lg transition-colors hover:bg-accent-hover"
                     >
-                      Admin Panel
+                      {dict.auth.adminPanel}
                     </button>
                   )}
                   <button
                     onClick={handleSignOut}
                     className="w-full py-2.5 bg-zinc-800 border border-zinc-600 text-neutral-300 text-sm font-medium rounded-lg transition-colors hover:bg-zinc-700 hover:text-white hover:border-zinc-500"
                   >
-                    Sign Out
+                    {dict.auth.signOut}
                   </button>
                 </div>
               ) : step === 'form' ? (
                 /* ── Sign-in / Sign-up form ────────────── */
                 <>
                   <p className="text-sm font-medium text-white text-center">
-                    {mode === 'signup' ? 'Sign Up' : 'Sign In'}
+                    {mode === 'signup' ? dict.auth.signUpLabel : dict.auth.signInLabel}
                   </p>
 
                   <form onSubmit={handleSendLink} className="space-y-3">
@@ -254,14 +232,14 @@ export default function UserDropdown({ renderTrigger, mode = 'signin', isOwner =
                         htmlFor={`dropdown-email-${mode}`}
                         className="block text-xs font-medium text-neutral-400 mb-1"
                       >
-                        Email Address:
+                        {dict.auth.emailAddressLabel}
                       </label>
                       <input
                         id={`dropdown-email-${mode}`}
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder="you@example.com"
+                        placeholder={dict.auth.emailPlaceholder}
                         required
                         disabled={loading}
                         className="w-full px-3 py-2.5 bg-zinc-800 border border-zinc-600 rounded-lg text-white text-sm placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-colors disabled:opacity-50"
@@ -293,10 +271,10 @@ export default function UserDropdown({ renderTrigger, mode = 'signin', isOwner =
                               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                             />
                           </svg>
-                          Sending...
+                          {dict.auth.sending}
                         </span>
                       ) : (
-                        mode === 'signup' ? 'Create Account' : 'Send Magic Link'
+                        mode === 'signup' ? dict.auth.createAccountBtn : dict.auth.sendMagicLink
                       )}
                     </button>
                   </form>
@@ -305,7 +283,7 @@ export default function UserDropdown({ renderTrigger, mode = 'signin', isOwner =
                   <div className="flex items-center gap-3">
                     <div className="flex-1 h-px bg-zinc-700" />
                     <span className="text-xs text-neutral-500 uppercase tracking-wider">
-                      or
+                      {dict.auth.or}
                     </span>
                     <div className="flex-1 h-px bg-zinc-700" />
                   </div>
@@ -335,7 +313,7 @@ export default function UserDropdown({ renderTrigger, mode = 'signin', isOwner =
                               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                             />
                           </svg>
-                          Redirecting...
+                          {dict.auth.redirecting}
                         </span>
                       ) : (
                         <>
@@ -358,7 +336,7 @@ export default function UserDropdown({ renderTrigger, mode = 'signin', isOwner =
                               fill="#EA4335"
                             />
                           </svg>
-                          {mode === 'signup' ? 'Sign up with Google' : 'Continue with Google'}
+                          {mode === 'signup' ? dict.auth.signUpWithGoogle : dict.auth.continueWithGoogle}
                         </>
                       )}
                     </button>
@@ -372,22 +350,22 @@ export default function UserDropdown({ renderTrigger, mode = 'signin', isOwner =
                   <p className="text-center text-xs text-neutral-500">
                     {mode === 'signup' ? (
                       <>
-                        Already have an account?{' '}
+                        {dict.auth.alreadyHaveAccount}{' '}
                         <a
-                          href="/login"
+                          href={`/${locale}/login`}
                           className="text-accent hover:text-accent-hover transition-colors font-medium"
                         >
-                          Sign in
+                          {dict.auth.signInLabel}
                         </a>
                       </>
                     ) : (
                       <>
-                        Don&apos;t have an account?{' '}
+                        {dict.auth.noAccount}{' '}
                         <a
-                          href="/signup"
+                          href={`/${locale}/signup`}
                           className="text-accent hover:text-accent-hover transition-colors font-medium"
                         >
-                          Sign up
+                          {dict.auth.signUpLabel}
                         </a>
                       </>
                     )}
@@ -415,16 +393,16 @@ export default function UserDropdown({ renderTrigger, mode = 'signin', isOwner =
                   <div>
                     <p className="text-xs text-neutral-400">
                       {mode === 'signup'
-                        ? 'We sent a confirmation link to'
-                        : 'We sent a login link to'}
+                        ? dict.auth.sentConfirmation
+                        : dict.auth.sentLogin}
                     </p>
                     <p className="text-sm text-white font-medium mt-0.5">{email}</p>
                   </div>
 
                   <p className="text-xs text-neutral-500">
                     {mode === 'signup'
-                      ? 'Check your inbox and click the link to complete sign up.'
-                      : 'Check your inbox and click the link to sign in.'}
+                      ? dict.auth.checkInboxSignUp
+                      : dict.auth.checkInboxSignIn}
                   </p>
 
                   <button
@@ -435,7 +413,7 @@ export default function UserDropdown({ renderTrigger, mode = 'signin', isOwner =
                     }}
                     className="text-xs text-neutral-500 hover:text-neutral-300 transition-colors"
                   >
-                    ← Use a different email
+                    {dict.auth.useDifferentEmail}
                   </button>
                 </div>
               )}
@@ -446,4 +424,3 @@ export default function UserDropdown({ renderTrigger, mode = 'signin', isOwner =
     </div>
   );
 }
-

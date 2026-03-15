@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { signIn } from 'next-auth/react';
+import { useTranslation } from '@/i18n/TranslationProvider';
 
 type Mode = 'login' | 'signup';
 type Step = 'email' | 'sent';
@@ -13,6 +14,7 @@ interface AuthCardProps {
 
 export default function AuthCard({ initialMode }: AuthCardProps) {
   const searchParams = useSearchParams();
+  const { dict, locale } = useTranslation();
 
   const [mode, setMode] = useState<Mode>(initialMode);
   const [step, setStep] = useState<Step>('email');
@@ -118,14 +120,14 @@ export default function AuthCard({ initialMode }: AuthCardProps) {
   }, []);
 
   const isLogin = mode === 'login';
-  const title = isLogin ? 'Welcome back!' : 'Create an account';
+  const title = isLogin ? dict.auth.welcomeBack : dict.auth.createAccount;
   const subtitle = isLogin
-    ? 'Sign in to your OpusKeys account'
-    : 'Join OpusKeys today';
+    ? dict.auth.signInToAccount
+    : dict.auth.joinToday;
   const switchText = isLogin
-    ? "Don't have an account?"
-    : 'Already have an account?';
-  const switchLabel = isLogin ? 'Sign up' : 'Log in';
+    ? dict.auth.noAccount
+    : dict.auth.alreadyHaveAccount;
+  const switchLabel = isLogin ? dict.auth.signUpLabel : dict.auth.signInLabel;
 
   return (
     <main className="min-h-[calc(100vh-60px)] flex items-center justify-center px-4">
@@ -145,14 +147,14 @@ export default function AuthCard({ initialMode }: AuthCardProps) {
             <form onSubmit={handleSendLink} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-neutral-300 mb-1.5">
-                  Email address
+                  {dict.auth.emailAddress}
                 </label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  placeholder="you@example.com"
+                  placeholder={dict.auth.emailPlaceholder}
                   className="w-full px-4 py-3 bg-dark-body border border-dark-border rounded-xl text-white placeholder-neutral-500 text-sm focus:outline-none focus:border-accent/50 transition-colors"
                 />
               </div>
@@ -184,10 +186,10 @@ export default function AuthCard({ initialMode }: AuthCardProps) {
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                       />
                     </svg>
-                    Sending link…
+                    {dict.auth.sendingLink}
                   </span>
                 ) : (
-                  `Send magic link`
+                  dict.auth.sendMagicLink
                 )}
               </button>
             </form>
@@ -195,7 +197,7 @@ export default function AuthCard({ initialMode }: AuthCardProps) {
             {/* ── Divider ──────────────────────────────── */}
             <div className="flex items-center gap-4 my-6">
               <div className="flex-1 h-px bg-dark-border" />
-              <span className="text-neutral-500 text-xs uppercase">or</span>
+              <span className="text-neutral-500 text-xs uppercase">{dict.auth.or}</span>
               <div className="flex-1 h-px bg-dark-border" />
             </div>
 
@@ -223,7 +225,7 @@ export default function AuthCard({ initialMode }: AuthCardProps) {
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                     />
                   </svg>
-                  Redirecting…
+                  {dict.auth.redirecting}
                 </span>
               ) : (
                 <>
@@ -245,7 +247,7 @@ export default function AuthCard({ initialMode }: AuthCardProps) {
                       fill="#EA4335"
                     />
                   </svg>
-                  Continue with Google
+                  {isLogin ? dict.auth.continueWithGoogle : dict.auth.signUpWithGoogle}
                 </>
               )}
             </button>
@@ -256,7 +258,7 @@ export default function AuthCard({ initialMode }: AuthCardProps) {
               <button
                 onClick={() => {
                   switchMode(isLogin ? 'signup' : 'login');
-                  window.history.replaceState(null, '', isLogin ? '/signup' : '/login');
+                  window.history.replaceState(null, '', isLogin ? `/${locale}/signup` : `/${locale}/login`);
                 }}
                 className="text-accent hover:underline font-medium"
               >
@@ -277,12 +279,12 @@ export default function AuthCard({ initialMode }: AuthCardProps) {
               </svg>
             </div>
             <h2 className="text-lg font-bold text-white text-center mt-4">
-              Check your email
+              {dict.auth.checkYourEmail}
             </h2>
             <p className="text-neutral-400 text-sm text-center mt-2 mb-6">
-              We sent a magic link to <span className="text-white font-medium">{email}</span>.
+              {dict.auth.magicLinkSentTo} <span className="text-white font-medium">{email}</span>.
               <br />
-              Click it to {isLogin ? 'sign in' : 'create your account'}.
+              {isLogin ? dict.auth.clickToSignIn : dict.auth.clickToCreate}
             </p>
             <button
               onClick={() => {
@@ -292,7 +294,7 @@ export default function AuthCard({ initialMode }: AuthCardProps) {
               }}
               className="w-full py-3 bg-dark-body border border-dark-border text-white text-sm font-semibold rounded-xl transition-colors hover:bg-dark-header"
             >
-              ← Back
+              {dict.auth.back}
             </button>
           </>
         )}

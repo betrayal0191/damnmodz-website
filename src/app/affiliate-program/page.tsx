@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Affiliate Program — DamnModz',
+  title: 'Affiliate Program — OpusKeys',
 };
 
 export default function AffiliateProgramPage() {

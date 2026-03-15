@@ -1,4 +1,8 @@
-import type { User } from '@supabase/supabase-js';
+interface SessionUser {
+  id?: string;
+  email?: string | null;
+  role?: string;
+}
 
 /** Emails that are always treated as owners (site administrators). */
 const OWNER_EMAILS: string[] = [
@@ -6,14 +10,15 @@ const OWNER_EMAILS: string[] = [
 ];
 
 /**
- * Check whether a Supabase user is a site owner.
+ * Check whether a user is a site owner.
  *
  * A user is an owner if:
- *  1. Their email is in the `OWNER_EMAILS` list, OR
- *  2. Their `app_metadata.role` is `'owner'`
+ *  1. Their role is `'owner'`, OR
+ *  2. Their email is in the `OWNER_EMAILS` list
  */
-export function isOwner(user: User | null): boolean {
+export function isOwner(user: SessionUser | null | undefined): boolean {
   if (!user) return false;
+  if (user.role === 'owner') return true;
   if (user.email && OWNER_EMAILS.includes(user.email.toLowerCase())) return true;
-  return user.app_metadata?.role === 'owner';
+  return false;
 }

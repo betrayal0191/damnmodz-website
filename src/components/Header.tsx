@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import content from '@/data/content.json';
 import HeaderActions from '@/components/HeaderActions';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/lib/auth';
 import { isOwner } from '@/lib/auth/owner';
+import { getDictionary } from '@/i18n/getDictionary';
+import type { Locale } from '@/i18n/config';
 
 /* ── Social icon SVGs ─────────────────────────────────── */
 function InstagramIcon() {
@@ -86,6 +88,14 @@ const navIcons: Record<string, () => JSX.Element> = {
   accounts: AccountsIcon,
 };
 
+/* Map icon key → dictionary key for nav labels */
+const navDictKeys: Record<string, string> = {
+  ingame: 'inGameItems',
+  gamecoins: 'gameCoins',
+  topups: 'topUps',
+  accounts: 'accounts',
+};
+
 const socialIcons: Record<string, () => JSX.Element> = {
   instagram: InstagramIcon,
   youtube: YouTubeIcon,
@@ -93,22 +103,37 @@ const socialIcons: Record<string, () => JSX.Element> = {
   discord: DiscordIcon,
 };
 
-export default async function Header() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+const socialHoverColors: Record<string, string> = {
+  instagram: 'social-instagram',
+  youtube:   'hover:bg-[#FF0000] hover:border-[#FF0000] hover:text-white',
+  tiktok:    'hover:bg-black hover:border-black hover:text-white',
+  discord:   'hover:bg-[#5865F2] hover:border-[#5865F2] hover:text-white',
+};
+
+export default async function Header({ locale }: { locale: Locale }) {
+  const session = await auth();
+  const user = session?.user ?? null;
   const { logo, nav, social } = content.header;
+  const dict = await getDictionary(locale);
 
   return (
     <header className="sticky top-0 z-50 bg-dark-header border-b border-dark-border">
       <div className="flex items-center h-[72px] px-10">
         {/* ── Logo ──────────────────────────────────────── */}
-        <Link href={logo.href} className="flex items-center gap-2.5 no-underline mr-10 flex-shrink-0">
-          {/* Purple star/leaf icon */}
-          <svg viewBox="0 0 24 24" className="w-7 h-7 text-accent fill-current">
-            <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8l-6.2 4.5 2.4-7.4L2 9.4h7.6z" />
+        <Link href={`/${locale}${logo.href === '/' ? '' : logo.href}`} className="flex items-center gap-2.5 no-underline mr-20 flex-shrink-0">
+          {/* OpusKeys icon */}
+          <svg viewBox="0 0 2293 2060" className="w-7 h-7" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="ok-grad" x1="0%" y1="50%" x2="100%" y2="50%">
+                <stop offset="0%" stopColor="#4225a3"/>
+                <stop offset="100%" stopColor="#c696d2"/>
+              </linearGradient>
+            </defs>
+            <path fill="url(#ok-grad)" d="M2136,652.22,1640.56,156.8C1539.64,55.88,1405.36,0,1262.74,0S985.84,55.88,884.92,156.8L508.35,533l240.2,240.2,54.21-53.79,25.86-26.27H829L1125.12,397a194.31,194.31,0,0,1,275.23,0l495.42,495.42c37.11,36.7,57.13,85.91,57.13,137.62a193.32,193.32,0,0,1-57.13,138l-495.42,495.42a194.31,194.31,0,0,1-275.23,0L748.55,1286.92l-240.2,240.2,58.8,58.8,317.77,317.77c100.92,100.92,235.19,156.38,377.82,156.38s276.9-55.46,377.82-156.38L2136,1408.28c101.33-100.93,156.79-235.2,156.79-378.24C2292.77,887.42,2237.31,753.14,2136,652.22Z"/>
+            <polygon fill="url(#ok-grad)" points="1331.35 949.57 458.99 949.57 568.41 841.61 386.23 659.42 0 1045.65 386.23 1414.77 568.73 1232.27 458.99 1122.53 1083.32 1122.53 1083.32 1367.04 1245.61 1367.04 1245.61 1122.53 1331.39 1122.53 1331.35 949.57"/>
           </svg>
-          <span className="text-xl font-bold text-white tracking-tight">
-            {logo.text_left}<span className="text-accent">{logo.text_right}</span>
+          <span className="text-xl font-bold tracking-tight leading-none">
+            <span className="text-accent">{logo.text_left}</span><span className="text-white">{logo.text_right}</span>
           </span>
         </Link>
 
@@ -116,13 +141,15 @@ export default async function Header() {
         <nav className="flex items-center gap-7 mr-auto">
           {nav.map((item: { label: string; icon?: string }) => {
             const NavIcon = item.icon ? navIcons[item.icon] : null;
+            const dictKey = item.icon ? navDictKeys[item.icon] : null;
+            const label = dictKey ? (dict.nav as Record<string, string>)[dictKey] ?? item.label : item.label;
             return (
               <span
                 key={item.label}
                 className="text-neutral-300 text-[15px] font-medium whitespace-nowrap transition-colors hover:text-white cursor-pointer select-none flex items-center gap-1.5"
               >
                 {NavIcon && <NavIcon />}
-                {item.label}
+                {label}
               </span>
             );
           })}
@@ -139,7 +166,7 @@ export default async function Header() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={s.label}
-                className="w-9 h-9 rounded-full border border-zinc-600 flex items-center justify-center text-neutral-400 transition-colors hover:text-white hover:border-zinc-400"
+                className={`w-9 h-9 rounded-full border border-zinc-600 flex items-center justify-center text-neutral-400 transition-colors ${socialHoverColors[s.icon] ?? 'hover:text-white hover:border-zinc-400'}`}
               >
                 {Icon && <Icon />}
               </a>
@@ -152,12 +179,12 @@ export default async function Header() {
           <div className="relative flex items-center">
             <input
               type="text"
-              placeholder="Search for products"
-              className="w-56 h-10 pl-4 pr-11 bg-transparent border border-zinc-600 rounded-full text-sm text-neutral-300 placeholder-neutral-500 focus:outline-none focus:border-accent transition-colors"
+              placeholder={dict.header.searchPlaceholder}
+              className="w-72 h-9 pl-4 pr-11 bg-transparent border border-zinc-600 rounded-full text-sm text-neutral-300 placeholder-neutral-500 focus:outline-none focus:border-accent transition-colors"
             />
             <button
               aria-label="Search"
-              className="absolute right-0 top-0 h-10 w-10 rounded-full bg-accent flex items-center justify-center transition-colors hover:bg-accent-hover"
+              className="absolute right-0 top-0 h-9 w-9 rounded-full bg-accent flex items-center justify-center transition-colors hover:bg-accent-hover"
             >
               <svg viewBox="0 0 24 24" className="w-[18px] h-[18px] fill-none stroke-white stroke-2 [stroke-linecap:round] [stroke-linejoin:round]">
                 <circle cx="11" cy="11" r="8" />
@@ -168,7 +195,7 @@ export default async function Header() {
         </div>
 
         {/* ── Right Icons (Sign In text + User + Wishlist + Cart) ── */}
-        <HeaderActions initialEmail={user?.email ?? null} initialIsOwner={isOwner(user ?? null)} />
+        <HeaderActions initialEmail={user?.email ?? null} initialIsOwner={isOwner(user)} locale={locale} />
       </div>
     </header>
   );

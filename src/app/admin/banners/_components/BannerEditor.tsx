@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import {
   DndContext,
   closestCenter,
@@ -29,7 +29,12 @@ export interface BannerItem {
   subtitle?: string;
   buttonText?: string;
   alt?: string;
+  description?: string;
+  platforms?: string[];
+  price?: string;
 }
+
+export type BannerField = 'title' | 'subtitle' | 'buttonText' | 'alt' | 'description' | 'platforms' | 'price';
 
 interface BannerEditorProps {
   label: string;
@@ -37,7 +42,71 @@ interface BannerEditorProps {
   items: BannerItem[];
   onChange: (items: BannerItem[]) => void;
   /** Which fields to show besides image + href */
-  fields: ('title' | 'subtitle' | 'buttonText' | 'alt')[];
+  fields: BannerField[];
+}
+
+/* ── Platform tag input ──────────────────────────────────── */
+function PlatformTagInput({
+  value,
+  onChange,
+}: {
+  value: string[];
+  onChange: (tags: string[]) => void;
+}) {
+  const [input, setInput] = useState('');
+
+  const addTag = () => {
+    const tag = input.trim().toUpperCase();
+    if (tag && !value.includes(tag)) {
+      onChange([...value, tag]);
+    }
+    setInput('');
+  };
+
+  const removeTag = (tag: string) => {
+    onChange(value.filter((t) => t !== tag));
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      addTag();
+    } else if (e.key === 'Backspace' && !input && value.length > 0) {
+      onChange(value.slice(0, -1));
+    }
+  };
+
+  return (
+    <div className="flex flex-wrap items-center gap-1.5 px-3 py-2 bg-zinc-800 border border-dark-border rounded-lg min-h-[38px] focus-within:border-accent/50 transition-colors">
+      {value.map((tag) => (
+        <span
+          key={tag}
+          className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-accent/20 text-accent text-xs font-bold"
+        >
+          {tag}
+          <button
+            type="button"
+            onClick={() => removeTag(tag)}
+            className="hover:text-white transition-colors"
+          >
+            <svg viewBox="0 0 24 24" className="w-3 h-3 fill-none stroke-current stroke-2 [stroke-linecap:round] [stroke-linejoin:round]">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </span>
+      ))}
+      <input
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        onKeyDown={handleKeyDown}
+        onBlur={addTag}
+        placeholder={value.length === 0 ? 'Type platform + Enter (e.g. PC, XBOX, PS5)' : 'Add…'}
+        className="flex-1 min-w-[80px] bg-transparent text-white text-sm placeholder-neutral-500 focus:outline-none"
+      />
+    </div>
+  );
 }
 
 /* ── Sortable card wrapper ───────────────────────────────── */
@@ -163,6 +232,19 @@ function SortableCard({
           </div>
         )}
 
+        {fields.includes('price') && (
+          <div>
+            <label className="block text-neutral-400 text-xs font-medium mb-1">Price Text</label>
+            <input
+              type="text"
+              value={item.price ?? ''}
+              onChange={(e) => onUpdate(index, { price: e.target.value })}
+              placeholder="Starting at USD 59.99+"
+              className="w-full px-3 py-2 bg-zinc-800 border border-dark-border rounded-lg text-white text-sm placeholder-neutral-500 focus:outline-none focus:border-accent/50 transition-colors"
+            />
+          </div>
+        )}
+
         {fields.includes('alt') && (
           <div>
             <label className="block text-neutral-400 text-xs font-medium mb-1">Alt Text</label>
@@ -172,6 +254,31 @@ function SortableCard({
               onChange={(e) => onUpdate(index, { alt: e.target.value })}
               placeholder="Image alt text"
               className="w-full px-3 py-2 bg-zinc-800 border border-dark-border rounded-lg text-white text-sm placeholder-neutral-500 focus:outline-none focus:border-accent/50 transition-colors"
+            />
+          </div>
+        )}
+
+        {/* Description — full width textarea */}
+        {fields.includes('description') && (
+          <div className="sm:col-span-2">
+            <label className="block text-neutral-400 text-xs font-medium mb-1">Description</label>
+            <textarea
+              value={item.description ?? ''}
+              onChange={(e) => onUpdate(index, { description: e.target.value })}
+              placeholder="Short product description shown on the banner overlay"
+              rows={2}
+              className="w-full px-3 py-2 bg-zinc-800 border border-dark-border rounded-lg text-white text-sm placeholder-neutral-500 focus:outline-none focus:border-accent/50 transition-colors resize-y"
+            />
+          </div>
+        )}
+
+        {/* Platforms tag input — full width */}
+        {fields.includes('platforms') && (
+          <div className="sm:col-span-2">
+            <label className="block text-neutral-400 text-xs font-medium mb-1">Platforms</label>
+            <PlatformTagInput
+              value={item.platforms ?? []}
+              onChange={(platforms) => onUpdate(index, { platforms })}
             />
           </div>
         )}
@@ -244,6 +351,9 @@ export default function BannerEditor({
       subtitle: '',
       buttonText: fields.includes('buttonText') ? 'Shop Now' : undefined,
       alt: fields.includes('alt') ? '' : undefined,
+      description: fields.includes('description') ? '' : undefined,
+      platforms: fields.includes('platforms') ? [] : undefined,
+      price: fields.includes('price') ? '' : undefined,
     };
     onChange([...items, newItem]);
   }, [items, onChange, fields]);

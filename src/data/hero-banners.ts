@@ -4,9 +4,12 @@ export interface HeroSlide {
   id: number;
   title: string;
   subtitle?: string;
+  description?: string;
   buttonText: string;
   image: string;
   href: string;
+  platforms?: string[];
+  price?: string;
 }
 
 export interface PromoBanner {
@@ -24,26 +27,35 @@ export const defaultHeroSlides: HeroSlide[] = [
   {
     id: 1,
     title: 'Marathon',
-    subtitle: '',
+    subtitle: 'The next chapter begins',
+    description: 'Enter a sci-fi PvP extraction shooter where every run counts. Team up, gear up, and fight to survive.',
     buttonText: 'Shop Now',
     image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1200&h=550&fit=crop',
     href: '#',
+    platforms: ['PC', 'XBOX', 'PS5'],
+    price: 'Starting at USD 59.99+',
   },
   {
     id: 2,
     title: 'Elden Ring',
-    subtitle: '',
+    subtitle: 'Shadow of the Erdtree',
+    description: 'Rise, Tarnished, and be guided by grace to brandish the power of the Elden Ring.',
     buttonText: 'Shop Now',
     image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1200&h=550&fit=crop',
     href: '#',
+    platforms: ['PC', 'XBOX', 'PS5', 'PS4'],
+    price: 'Starting at USD 49.99+',
   },
   {
     id: 3,
     title: 'Cyberpunk 2077',
-    subtitle: '',
+    subtitle: 'Phantom Liberty',
+    description: 'Become an urban mercenary equipped with cybernetic enhancements in the open world of Night City.',
     buttonText: 'Shop Now',
     image: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=1200&h=550&fit=crop',
     href: '#',
+    platforms: ['PC', 'XBOX', 'PS5'],
+    price: 'Starting at USD 29.99+',
   },
 ];
 

@@ -83,9 +83,12 @@ export default function AdminBannersPage() {
         id: s.id,
         title: s.title ?? '',
         subtitle: s.subtitle,
+        description: s.description,
         buttonText: s.buttonText ?? 'Shop Now',
         image: s.image,
         href: s.href,
+        platforms: s.platforms,
+        price: s.price,
       })),
       sideBanners: sideBanners.map((b) => ({
         id: b.id,
@@ -176,7 +179,7 @@ export default function AdminBannersPage() {
               description="Main carousel at the top of the homepage. Recommended size: 1200×550px."
               items={heroSlides}
               onChange={handleHeroChange}
-              fields={['title', 'subtitle', 'buttonText']}
+              fields={['title', 'subtitle', 'description', 'platforms', 'buttonText', 'price']}
             />
           </CollapsibleSection>
 

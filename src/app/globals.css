@@ -30,3 +30,30 @@
   color: white;
 }
 
+/* ── Modded Accounts section ── */
+
+/* Boosting Services gradient text */
+.boosting-gradient {
+  background: linear-gradient(90deg, #ef4444 0%, #f97316 40%, #eab308 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Dashed decorative circle */
+.dashed-circle {
+  border: 2px dashed rgba(255, 255, 255, 0.06);
+  border-radius: 50%;
+  position: absolute;
+}
+
+/* Floating game card animation */
+.game-float-card {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Game card red glow border on left */
+.game-card-glow {
+  border-left: 2px solid rgba(239, 68, 68, 0.5);
+}
+

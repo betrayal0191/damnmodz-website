@@ -21,6 +21,10 @@ const config: Config = {
           from: { opacity: '0', transform: 'translateY(20px)' },
           to: { opacity: '1', transform: 'translateY(0)' },
         },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-12px)' },
+        },
       },
       animation: {
         'slide-up': 'slideUp 0.6s ease-out forwards',
@@ -28,6 +32,7 @@ const config: Config = {
         'slide-up-2': 'slideUp 0.6s ease-out 0.25s forwards',
         'slide-up-3': 'slideUp 0.6s ease-out 0.4s forwards',
         'slide-up-4': 'slideUp 0.6s ease-out 0.55s forwards',
+        float: 'float 4s ease-in-out infinite',
       },
     },
   },

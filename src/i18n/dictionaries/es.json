@@ -63,6 +63,9 @@
     "es": "Español",
     "pl": "Polski"
   },
+  "hero": {
+    "shopNow": "Comprar Ahora"
+  },
   "footer": {
     "description": "La tienda online de equipamiento y electrónica es una de las principales tiendas online. La colección fue lanzada en 25 volúmenes.",
     "legal": "Legal",

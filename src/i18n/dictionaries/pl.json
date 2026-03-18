@@ -63,6 +63,9 @@
     "es": "Español",
     "pl": "Polski"
   },
+  "hero": {
+    "shopNow": "Kup Teraz"
+  },
   "footer": {
     "description": "Sklep internetowy ze sprzętem i elektroniką jest jednym z wiodących sklepów internetowych. Kolekcja została wydana w 25 tomach.",
     "legal": "Prawne",

@@ -1,14 +1,16 @@
 import HeroCarousel from './HeroCarousel';
 import PromoBanner from './PromoBanner';
-import { sideBanners, bottomBanners } from '@/data/hero-banners';
+import { getBannersForDisplay } from '@/lib/banners';
 
-export default function HeroSection() {
+export default async function HeroSection() {
+  const { heroSlides, sideBanners, bottomBanners } = await getBannersForDisplay();
+
   return (
     <section className="flex flex-col gap-4">
       {/* ── Top row: carousel + side banners ── */}
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_0.52fr] gap-4" style={{ minHeight: 380 }}>
         {/* Carousel */}
-        <HeroCarousel />
+        <HeroCarousel slides={heroSlides} />
 
         {/* Stacked side banners */}
         <div className="hidden lg:grid grid-rows-2 gap-4">
